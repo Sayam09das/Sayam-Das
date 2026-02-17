@@ -1,417 +1,297 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Sun, Moon, ArrowUpRight } from 'lucide-react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { WordRotate } from "../ui/word-rotate";
 
-gsap.registerPlugin(ScrollTrigger);
+const sections = ["home", "about", "projects", "blogs"];
 
-const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [theme, setTheme] = useState('dark');
-  const [activeSection, setActiveSection] = useState('home');
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const navRef = useRef(null);
-  const progressRef = useRef(null);
+export default function Navbar() {
+    const [scrolled, setScrolled] = useState(false);
+    const [active, setActive] = useState("home");
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [hoveredSection, setHoveredSection] = useState(null);
 
-  const navLinks = [
-    { name: 'Home', href: '#home' },
-    { name: 'About', href: '#about' },
-    { name: 'Skills', href: '#skills' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Experience', href: '#experience' },
-    { name: 'Contact', href: '#contact' },
-  ];
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 50);
 
-  // Theme toggle with localStorage
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    setTheme(savedTheme);
-    document.documentElement.classList.toggle('light', savedTheme === 'light');
-  }, []);
+            sections.forEach((section) => {
+                const element = document.getElementById(section);
+                if (element) {
+                    const rect = element.getBoundingClientRect();
+                    if (rect.top <= 150 && rect.bottom >= 150) {
+                        setActive(section);
+                    }
+                }
+            });
+        };
 
-  const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-    document.documentElement.classList.toggle('light', newTheme === 'light');
-  };
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
-  // GSAP Scroll animations
-  useEffect(() => {
-    const navbar = navRef.current;
+    // Close mobile menu when window is resized to desktop
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth >= 768 && mobileMenuOpen) {
+                setMobileMenuOpen(false);
+            }
+        };
 
-    // Navbar shrink on scroll
-    gsap.to(navbar, {
-      scrollTrigger: {
-        trigger: document.body,
-        start: 'top top',
-        end: '+=100',
-        scrub: true,
-      },
-      padding: '0.75rem 0',
-      duration: 0.3,
-    });
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, [mobileMenuOpen]);
 
-    // Scroll progress bar
-    const updateProgress = () => {
-      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = (window.scrollY / scrollHeight) * 100;
-      setScrollProgress(progress);
+    // Prevent body scroll when mobile menu is open
+    useEffect(() => {
+        if (mobileMenuOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "unset";
+        }
+
+        return () => {
+            document.body.style.overflow = "unset";
+        };
+    }, [mobileMenuOpen]);
+
+    const handleNavClick = (section) => {
+        setActive(section);
+        setMobileMenuOpen(false);
     };
 
-    window.addEventListener('scroll', updateProgress);
-    return () => window.removeEventListener('scroll', updateProgress);
-  }, []);
-
-  // Active section detection
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = navLinks.map(link => link.href.substring(1));
-      const current = sections.find(section => {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          return rect.top <= 100 && rect.bottom >= 100;
-        }
-        return false;
-      });
-      if (current) setActiveSection(current);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Framer Motion variants
-  const navbarVariants = {
-    hidden: { y: -100, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: 'spring',
-        stiffness: 100,
-        damping: 20,
-        staggerChildren: 0.1,
-      },
-    },
-  };
-
-  const linkVariants = {
-    hidden: { y: -20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { type: 'spring', stiffness: 300, damping: 24 },
-    },
-  };
-
-  const mobileMenuVariants = {
-    closed: {
-      x: '100%',
-      transition: {
-        type: 'spring',
-        stiffness: 400,
-        damping: 40,
-      },
-    },
-    open: {
-      x: 0,
-      transition: {
-        type: 'spring',
-        stiffness: 400,
-        damping: 40,
-        staggerChildren: 0.07,
-        delayChildren: 0.2,
-      },
-    },
-  };
-
-  const mobileLinkVariants = {
-    closed: { x: 50, opacity: 0 },
-    open: { x: 0, opacity: 1 },
-  };
-
-  return (
-    <>
-      {/* Scroll Progress Bar */}
-      <motion.div
-        ref={progressRef}
-        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-accent)] to-[var(--color-primary)] z-[100] origin-left"
-        style={{ scaleX: scrollProgress / 100 }}
-        initial={{ scaleX: 0 }}
-      />
-
-      {/* Navbar */}
-      <motion.nav
-        ref={navRef}
-        variants={navbarVariants}
-        initial="hidden"
-        animate="visible"
-        className="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-7xl z-50 px-6 py-4 rounded-2xl backdrop-blur-xl bg-[var(--glass-bg)] border border-[var(--glass-border)] shadow-2xl shadow-black/10"
-      >
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <motion.a
-            href="#home"
-            variants={linkVariants}
-            className="text-2xl font-bold bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)] bg-clip-text text-transparent hover:scale-105 transition-transform"
-            style={{ fontFamily: "'Sora', 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}
-          >
-            Portfolio
-          </motion.a>
-
-          {/* Desktop Navigation */}
-          <motion.div
-            variants={linkVariants}
-            className="hidden md:flex items-center gap-1"
-          >
-            {navLinks.map((link, index) => (
-              <motion.a
-                key={link.name}
-                href={link.href}
-                variants={linkVariants}
-                className={`relative px-4 py-2 text-sm font-medium transition-colors group ${activeSection === link.href.substring(1)
-                    ? 'text-[var(--text-primary)]'
-                    : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-                  }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {link.name}
-                {/* Animated underline */}
-                <motion.span
-                  className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)] origin-left"
-                  initial={{ scaleX: 0 }}
-                  whileHover={{ scaleX: 1 }}
-                  transition={{ duration: 0.3 }}
-                />
-                {/* Active indicator */}
-                {activeSection === link.href.substring(1) && (
-                  <motion.span
-                    layoutId="activeSection"
-                    className="absolute inset-0 bg-[var(--glass-bg)] rounded-lg -z-10"
-                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                  />
-                )}
-              </motion.a>
-            ))}
-          </motion.div>
-
-          {/* Right Side Actions */}
-          <motion.div variants={linkVariants} className="flex items-center gap-3">
-            {/* Theme Toggle */}
-            <motion.button
-              onClick={toggleTheme}
-              className="p-2 rounded-lg bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)] transition-colors"
-              whileHover={{ scale: 1.1, rotate: 180 }}
-              whileTap={{ scale: 0.9 }}
-              aria-label="Toggle theme"
-            >
-              <AnimatePresence mode="wait">
-                {theme === 'dark' ? (
-                  <motion.div
-                    key="moon"
-                    initial={{ rotate: -180, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: 180, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Moon size={18} />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="sun"
-                    initial={{ rotate: 180, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: -180, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Sun size={18} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.button>
-
-            {/* CTA Button - Desktop */}
-            <motion.a
-              href="#contact"
-              className="hidden md:flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-hover)] text-white font-semibold text-sm shadow-lg shadow-[var(--color-primary)]/30 hover:shadow-[var(--color-primary)]/50 transition-all overflow-hidden relative group"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {/* Gradient glow effect */}
-              <motion.span
-                className="absolute inset-0 bg-gradient-to-r from-[var(--color-accent)] to-[var(--color-primary)] opacity-0 group-hover:opacity-100 transition-opacity"
-                initial={{ x: '-100%' }}
-                whileHover={{ x: '100%' }}
-                transition={{ duration: 0.6 }}
-              />
-              <span className="relative z-10">Hire Me</span>
-              <ArrowUpRight size={16} className="relative z-10" />
-            </motion.a>
-
-            {/* Mobile Menu Button */}
-            <motion.button
-              onClick={() => setIsOpen(!isOpen)}
-              className="md:hidden p-2 rounded-lg bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)] transition-colors"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              aria-label="Toggle menu"
-            >
-              <AnimatePresence mode="wait">
-                {isOpen ? (
-                  <motion.div
-                    key="close"
-                    initial={{ rotate: -90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: 90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <X size={20} />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="menu"
-                    initial={{ rotate: 90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: -90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Menu size={20} />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.button>
-          </motion.div>
-        </div>
-      </motion.nav>
-
-      {/* Mobile Menu Drawer */}
-      <AnimatePresence>
-        {isOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
-              onClick={() => setIsOpen(false)}
-            />
-
-            {/* Mobile Drawer */}
-            <motion.div
-              variants={mobileMenuVariants}
-              initial="closed"
-              animate="open"
-              exit="closed"
-              className="fixed top-0 right-0 bottom-0 w-[80%] max-w-sm bg-[var(--bg-secondary)] border-l border-[var(--glass-border)] shadow-2xl z-50 md:hidden overflow-y-auto"
-            >
-              <div className="flex flex-col p-8 gap-6">
-                {/* Mobile Logo */}
-                <motion.div
-                  variants={mobileLinkVariants}
-                  className="text-2xl font-bold bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-accent)] bg-clip-text text-transparent mb-4"
+    return (
+        <>
+            <header className="fixed top-2 sm:top-4 md:top-6 left-1/2 -translate-x-1/2 z-50 w-[92%] sm:w-[95%] md:w-auto">
+                <nav
+                    className={`
+                        flex items-center justify-between
+                        transition-all duration-300
+                        border border-gray-200/80
+                        bg-white/95 backdrop-blur-md
+                        rounded-full
+                        ${scrolled
+                            ? "px-3 sm:px-4 md:px-6 py-2 shadow-lg"
+                            : "px-4 sm:px-6 md:px-10 py-2.5 sm:py-3 md:py-4"
+                        }
+                        ${mobileMenuOpen ? "rounded-3xl" : ""}
+                    `}
                 >
-                  Portfolio
-                </motion.div>
+                    {/* Logo and Mobile Menu Container */}
+                    <div className="flex items-center justify-between w-full md:w-auto">
+                        {/* Logo */}
+                        <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+                            <img
+                                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEYb9H0sEj8UGOgVL9rlEZg6isF4rezzYKVA&s"
+                                alt="Sayam Logo"
+                                className="h-7 w-7 sm:h-8 sm:w-8 md:h-10 md:w-10 rounded-full object-cover"
+                            />
+                        </div>
 
-                {/* Mobile Links */}
-                {navLinks.map((link) => (
-                  <motion.a
-                    key={link.name}
-                    href={link.href}
-                    variants={mobileLinkVariants}
-                    onClick={() => setIsOpen(false)}
-                    className={`text-lg font-medium py-3 px-4 rounded-xl transition-all ${activeSection === link.href.substring(1)
-                        ? 'text-[var(--text-primary)] bg-[var(--glass-bg)] border border-[var(--glass-border)]'
-                        : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--glass-bg)]'
-                      }`}
-                    whileHover={{ x: 10 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    {link.name}
-                  </motion.a>
-                ))}
+                        {/* Available for work - Middle */}
+                        <span className="md:hidden text-xs sm:text-sm font-medium text-[#303030] whitespace-nowrap absolute left-1/2 -translate-x-1/2">
+                            Available for work
+                        </span>
 
-                {/* Mobile CTA */}
-                <motion.a
-                  href="#contact"
-                  variants={mobileLinkVariants}
-                  onClick={() => setIsOpen(false)}
-                  className="flex items-center justify-center gap-2 px-6 py-4 mt-4 rounded-xl bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-hover)] text-white font-semibold text-base shadow-lg shadow-[var(--color-primary)]/30"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  Hire Me
-                  <ArrowUpRight size={18} />
-                </motion.a>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+                        {/* Mobile Menu Button */}
+                        <button
+                            className="md:hidden p-1 hover:bg-gray-100 rounded-full transition-colors flex-shrink-0"
+                            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                            aria-label="Toggle menu"
+                        >
+                            {mobileMenuOpen ? (
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="sm:w-6 sm:h-6"
+                                >
+                                    <path d="M18 6 6 18" />
+                                    <path d="m6 6 12 12" />
+                                </svg>
+                            ) : (
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    className="sm:w-6 sm:h-6"
+                                >
+                                    <line x1="4" x2="20" y1="12" y2="12" />
+                                    <line x1="4" x2="20" y1="6" y2="6" />
+                                    <line x1="4" x2="20" y1="18" y2="18" />
+                                </svg>
+                            )}
+                        </button>
+                    </div>
 
-      {/* CSS Variables */}
-      <style>{`
-        :root {
-          --bg-primary: #0b1120;
-          --bg-secondary: #111827;
-          --bg-tertiary: #1f2937;
-          --bg-elevated: #182033;
-          --text-primary: #f9fafb;
-          --text-secondary: #9ca3af;
-          --color-primary: #6366f1;
-          --color-primary-hover: #4f46e5;
-          --color-accent: #22d3ee;
-          --border-primary: #1f2937;
-          --glass-bg: rgba(255, 255, 255, 0.05);
-          --glass-border: rgba(255, 255, 255, 0.1);
-        }
+                    {/* Navigation Links - Desktop & Tablet */}
+                    <div className="hidden md:flex items-center gap-4 lg:gap-6 ml-6 lg:ml-8">
+                        {sections.map((section) => (
+                            <motion.div
+                                key={section}
+                                className="relative overflow-hidden cursor-pointer"
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onMouseEnter={() => setHoveredSection(section)}
+                                onMouseLeave={() => setHoveredSection(null)}
+                            >
+                                <a
+                                    href={`#${section}`}
+                                    onClick={() => handleNavClick(section)}
+                                    className={`
+                                        capitalize text-sm font-medium transition-all duration-300 block
+                                        ${active === section
+                                            ? "text-[#5e67e5]"
+                                            : "text-[#303030] hover:text-[#4c55d4]"
+                                        }
+                                    `}
+                                >
+                                    {hoveredSection === section ? (
+                                        <WordRotate
+                                            words={[section, section]}
+                                            duration={500}
+                                            className={`
+                                                capitalize text-sm font-medium
+                                                ${active === section
+                                                    ? "text-[#5e67e5]"
+                                                    : "text-[#4c55d4]"
+                                                }
+                                            `}
+                                        />
+                                    ) : (
+                                        <span className={`
+                                            capitalize text-sm font-medium
+                                            ${active === section
+                                                ? "text-[#5e67e5]"
+                                                : "text-[#303030]"
+                                            }
+                                        `}>
+                                            {section}
+                                        </span>
+                                    )}
+                                </a>
+                            </motion.div>
+                        ))}
 
-        .light {
-          --bg-primary: #ffffff;
-          --bg-secondary: #f9fafb;
-          --bg-tertiary: #f3f4f6;
-          --bg-elevated: #ffffff;
-          --text-primary: #111827;
-          --text-secondary: #6b7280;
-          --color-primary: #6366f1;
-          --color-primary-hover: #4f46e5;
-          --color-accent: #06b6d4;
-          --border-primary: #e5e7eb;
-          --glass-bg: rgba(255, 255, 255, 0.8);
-          --glass-border: rgba(0, 0, 0, 0.1);
-        }
+                        {/* Contact Button with Animation */}
+                        <motion.div
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="relative overflow-hidden ml-2"
+                        >
+                            <a
+                                href="#contact"
+                                className="contact-button"
+                            >
+                                <span className="diagonal-fill"></span>
+                                <span className="contact-text">Contact</span>
+                            </a>
+                        </motion.div>
+                    </div>
+                </nav>
+            </header>
 
-        @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+            {/* Mobile Menu - Full Screen Overlay */}
+            <AnimatePresence>
+                {mobileMenuOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="fixed inset-0 z-40 md:hidden bg-white/95 backdrop-blur-md"
+                        onClick={() => setMobileMenuOpen(false)}
+                    >
+                        <motion.div
+                            initial={{ y: -20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            exit={{ y: -20, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="flex flex-col items-center justify-center h-full gap-6 sm:gap-8"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            {sections.map((section, index) => (
+                                <motion.div
+                                    key={section}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: index * 0.1 }}
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    onMouseEnter={() => setHoveredSection(section)}
+                                    onMouseLeave={() => setHoveredSection(null)}
+                                >
+                                    <a
+                                        href={`#${section}`}
+                                        onClick={() => handleNavClick(section)}
+                                        className={`
+                                            capitalize text-2xl sm:text-3xl font-semibold transition-all duration-300 block
+                                            ${active === section
+                                                ? "text-[#5e67e5]"
+                                                : "text-[#303030] hover:text-[#4c55d4]"
+                                            }
+                                        `}
+                                    >
+                                        {hoveredSection === section ? (
+                                            <WordRotate
+                                                words={[section, section]}
+                                                duration={500}
+                                                className={`
+                                                    capitalize text-2xl sm:text-3xl font-semibold
+                                                    ${active === section
+                                                        ? "text-[#5e67e5]"
+                                                        : "text-[#4c55d4]"
+                                                    }
+                                                `}
+                                            />
+                                        ) : (
+                                            <span className={`
+                                                capitalize text-2xl sm:text-3xl font-semibold
+                                                ${active === section
+                                                    ? "text-[#5e67e5]"
+                                                    : "text-[#303030]"
+                                                }
+                                            `}>
+                                                {section}
+                                            </span>
+                                        )}
+                                    </a>
+                                </motion.div>
+                            ))}
 
-        * {
-          font-family: 'Sora', 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
-        }
-
-        body {
-          background: var(--bg-primary);
-          color: var(--text-primary);
-        }
-
-        /* Smooth scrolling */
-        html {
-          scroll-behavior: smooth;
-        }
-
-        /* Focus styles for accessibility */
-        *:focus-visible {
-          outline: 2px solid var(--color-primary);
-          outline-offset: 2px;
-          border-radius: 4px;
-        }
-      `}</style>
-    </>
-  );
-};
-
-export default Navbar;
+                            {/* Contact Button Mobile */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: sections.length * 0.1 }}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="relative overflow-hidden mt-4"
+                            >
+                                <a
+                                    href="#contact"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="contact-button text-base sm:text-lg px-6 py-3"
+                                >
+                                    <span className="diagonal-fill"></span>
+                                    <span className="contact-text">Contact</span>
+                                </a>
+                            </motion.div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </>
+    );
+}

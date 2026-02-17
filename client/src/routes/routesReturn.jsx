@@ -1,19 +1,9 @@
 import React from 'react'
-import Hero from '../Pages/Hero'
-import About from '../Pages/About'
-import Skills from '../Pages/Skills'
-import Projects from '../Pages/Projects'
-import Experience from '../Pages/Experience'
-function RoutesReturn() {
+
+const routesReturn = () => {
   return (
-    <div>
-      <Hero />
-      <About />
-      <Skills />
-      <Projects />
-      <Experience /> 
-    </div>
+    <div>routesReturn</div>
   )
 }
 
-export { RoutesReturn }
+export default routesReturn

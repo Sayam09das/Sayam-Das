@@ -1,18 +1,18 @@
-# TODO: Implement OrbitingCircles in Hero Section
+# Task: Update Navbar with animations and responsive design
 
-## Phase 1: Update OrbitingCircles Component
-- [x] Read and analyze the existing component
-- [x] Update SVG path color to match website colors (`stroke-[var(--color-primary)]/20`)
-- [x] Adjust duration, radius, and iconSize for better visuals
+## Steps to complete:
 
-## Phase 2: Update Hero.jsx
-- [x] Replace existing glass card content with OrbitingCircles
-- [x] Style tech badges to match website theme
-- [x] Keep 3D parallax mouse effect on container
-- [x] Add center glow effect
+1. [x] Read and understand current Navbar.jsx, Button.jsx, and word-rotate.tsx implementations
+2. [x] Update Navbar.jsx to add:
+   - Mobile menu with hamburger/X button toggle
+   - Button.jsx animation style for Contact button
+   - word-rotate animation for nav links (keeping same words)
+   - Use colors from App.css (#303030 for text, #4c55d4 for hover)
+   - Responsive media queries for all devices
+3. [x] Test the changes
 
-## Phase 3: Testing
-- [x] Verify implementation works correctly (Server running at http://localhost:5174/)
-- [x] Check colors match website theme
-- [x] Test mouse interactions
+## Key Colors from App.css:
+- text-main: #303030
+- accent: #5e67e5
+- accent-hover: #4c55d4
 
