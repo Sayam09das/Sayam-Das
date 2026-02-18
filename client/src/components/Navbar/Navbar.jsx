@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { WordRotate } from "../ui/word-rotate";
+import { AnimatedShinyText } from "../ui/animated-shiny-text";
+import { Circle } from "lucide-react";
 
 const sections = ["home", "about", "projects", "blogs"];
 
@@ -77,7 +79,7 @@ export default function Navbar() {
                     `}
                 >
                     {/* Logo and Mobile Menu Container */}
-                    <div className="flex items-center justify-between w-full md:w-auto">
+                    <div className="flex items-center justify-between w-full md:w-auto relative">
                         {/* Logo */}
                         <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
                             <img
@@ -88,9 +90,10 @@ export default function Navbar() {
                         </div>
 
                         {/* Available for work - Middle */}
-                        <span className="md:hidden text-xs sm:text-sm font-medium text-[#303030] whitespace-nowrap absolute left-1/2 -translate-x-1/2">
+                        <AnimatedShinyText className="md:hidden text-xs sm:text-sm font-medium text-green-500 whitespace-nowrap absolute left-1/2 -translate-x-1/2">
+                            <Circle className="w-2 h-2 fill-green-500 mr-1.5" />
                             Available for work
-                        </span>
+                        </AnimatedShinyText>
 
                         {/* Mobile Menu Button */}
                         <button
