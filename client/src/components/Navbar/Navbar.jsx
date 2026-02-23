@@ -79,7 +79,7 @@ export default function Navbar() {
                     `}
                 >
                     {/* Logo and Mobile Menu Container */}
-                    <div className="flex items-center justify-between w-full md:w-auto relative">
+                    <div className="flex items-center justify-between w-full md:w-auto relative gap-4 md:gap-0">
                         {/* Logo */}
                         <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
                             <img
