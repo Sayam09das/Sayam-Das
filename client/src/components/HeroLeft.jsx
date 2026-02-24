@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
-
-const lines = ['I engineer', 'immersive digital', 'experiences.']
+import useIsMobile from '../hooks/useIsMobile'
 
 export default function HeroLeft({ contentRef }) {
+  const isMobile = useIsMobile()
   const [magnet, setMagnet] = useState({ x: 0, y: 0, glow: false })
 
   const lineVariants = useMemo(
@@ -19,6 +19,7 @@ export default function HeroLeft({ contentRef }) {
   )
 
   const onMove = (event) => {
+    if (isMobile) return
     const rect = event.currentTarget.getBoundingClientRect()
     const x = (event.clientX - (rect.left + rect.width / 2)) * 0.14
     const y = (event.clientY - (rect.top + rect.height / 2)) * 0.18
@@ -42,33 +43,24 @@ export default function HeroLeft({ contentRef }) {
       </motion.div>
 
       <div className="space-y-4 md:text-center lg:text-left">
-        <h1 id="hero-headline" className="text-4xl font-black leading-[0.9] tracking-[-0.05em] text-zinc-900 dark:text-white sm:text-5xl md:text-6xl lg:text-[56px] xl:text-[68px]">
-          {lines.map((line, index) => (
-            <motion.span
-              key={line}
-              custom={index}
-              variants={lineVariants}
-              initial="hidden"
-              animate="visible"
-              className="block"
-            >
-              {line}
-            </motion.span>
-          ))}
+        <h1 id="hero-headline" className="text-3xl font-black leading-[0.95] tracking-[-0.05em] text-zinc-900 dark:text-white sm:text-4xl md:text-5xl lg:text-6xl">
+          <motion.span custom={0} variants={lineVariants} initial="hidden" animate="visible" className="block">
+            Creative Technologist crafting
+          </motion.span>
+          <motion.span custom={1} variants={lineVariants} initial="hidden" animate="visible" className="mt-1 block">
+            <span className="relative inline-block">
+              immersive
+              <motion.span
+                className="absolute -bottom-2 left-0 h-[4px] w-full rounded-full bg-[#B8E93A]"
+                initial={{ scaleX: 0, opacity: 0 }}
+                animate={{ scaleX: 1, opacity: 1 }}
+                transition={{ duration: 0.8, delay: 1, ease: 'easeOut' }}
+                style={{ transformOrigin: 'left center' }}
+              />
+            </span>{' '}
+            digital experiences.
+          </motion.span>
         </h1>
-
-        <svg viewBox="0 0 360 20" xmlns="http://www.w3.org/2000/svg" className="h-4 w-44 text-[#B8E93A] md:mx-auto lg:mx-0">
-          <motion.path
-            d="M3 12 C38 2, 76 18, 110 10 C144 2, 181 18, 214 10 C248 3, 287 17, 322 9 C336 6, 347 9, 357 8"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="4"
-            strokeLinecap="round"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: 1 }}
-            transition={{ duration: 1.1, delay: 0.95, ease: 'easeOut' }}
-          />
-        </svg>
       </div>
 
       <motion.p
@@ -86,8 +78,8 @@ export default function HeroLeft({ contentRef }) {
         onMouseMove={onMove}
         onMouseLeave={onLeave}
         initial={{ opacity: 0, scale: 0.9, y: 14 }}
-        animate={{ opacity: 1, scale: 1, x: magnet.x, y: magnet.y }}
-        transition={{ type: 'spring', stiffness: 260, damping: 20, delay: 1.2 }}
+        animate={{ opacity: 1, scale: 1, x: isMobile ? 0 : magnet.x, y: isMobile ? 0 : magnet.y }}
+        transition={isMobile ? { duration: 0.45, delay: 0.9, ease: 'easeOut' } : { type: 'spring', stiffness: 260, damping: 20, delay: 1.2 }}
         whileHover={{ scale: 1.04 }}
         whileTap={{ scale: 0.97 }}
         className="rounded-xl border border-[#B8E93A] bg-[#C6F54D] px-7 py-4 text-sm font-semibold uppercase tracking-[0.12em] text-[#111111] will-change-transform dark:border-[#C6F54D] dark:bg-[#C6F54D] dark:text-[#111111]"

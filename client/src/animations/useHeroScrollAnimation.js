@@ -15,8 +15,30 @@ export default function useHeroScrollAnimation({
     if (!sectionRef.current) {
       return undefined
     }
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const isMobile = window.matchMedia('(max-width: 767px)').matches
 
     const ctx = gsap.context(() => {
+      if (reduceMotion || isMobile) {
+        gsap.fromTo(
+          [contentRef.current, portraitRef.current],
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.65,
+            stagger: 0.08,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top 82%',
+              toggleActions: 'play none none reverse',
+            },
+          },
+        )
+        return
+      }
+
       const triggerConfig = {
         trigger: sectionRef.current,
         start: 'top 80%',

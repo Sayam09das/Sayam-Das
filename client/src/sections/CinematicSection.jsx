@@ -1,7 +1,9 @@
 import { useRef } from 'react'
 import useCinematicScroll from '../animations/useCinematicScroll'
+import useIsMobile from '../hooks/useIsMobile'
 
 export default function CinematicSection() {
+  const isMobile = useIsMobile()
   const sectionRef = useRef(null)
   const headlineRef = useRef(null)
   const imageRef = useRef(null)
@@ -23,6 +25,36 @@ export default function CinematicSection() {
     depthMidRef,
     depthFgRef,
   })
+
+  if (isMobile) {
+    return (
+      <section
+        id="cinematic"
+        ref={sectionRef}
+        data-scroll-section
+        className="relative overflow-hidden bg-[#F5F6ED] px-6 py-20 dark:bg-[#121212] md:px-10 md:py-24"
+      >
+        <div className="mx-auto max-w-[1100px] overflow-hidden rounded-3xl border border-[#E2E8C0] bg-[#EEF2D3] dark:border-[#2A2A2A] dark:bg-[#1A1A1A]">
+          <img
+            src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&fm=webp&w=1800&q=80"
+            alt="Cinematic product reveal"
+            width="1800"
+            height="1100"
+            loading="lazy"
+            decoding="async"
+            className="h-[300px] w-full object-cover"
+          />
+          <div className="space-y-4 p-6">
+            <h2 className="text-3xl font-bold text-zinc-900 dark:text-white">Crafted For Impact</h2>
+            <p className="text-sm leading-7 text-zinc-700 dark:text-[#BBBBBB]">
+              Every frame is tuned for narrative clarity and premium motion language without
+              compromising performance.
+            </p>
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section

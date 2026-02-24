@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import usePortfolioAnimation from '../animations/usePortfolioAnimation'
 import ShaderImageReveal from './ShaderImageReveal'
+import useIsMobile from '../hooks/useIsMobile'
 
 const tabs = ['All', 'Branding', 'UI', 'Web']
 const caseStudyFlow = [
@@ -78,6 +79,7 @@ const projects = [
 ]
 
 export default function Portfolio() {
+  const isMobile = useIsMobile()
   const [activeTab, setActiveTab] = useState('All')
   const sectionRef = useRef(null)
   const cardsRef = useRef([])
@@ -144,7 +146,7 @@ export default function Portfolio() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.96 }}
               transition={{ duration: 0.35, ease: 'easeOut' }}
-              whileHover="hover"
+              whileHover={isMobile ? undefined : 'hover'}
               whileTap="tap"
               variants={{
                 hover: { y: -10, boxShadow: '0 24px 46px rgba(0,0,0,0.14)' },
@@ -153,7 +155,7 @@ export default function Portfolio() {
               className="group overflow-hidden rounded-xl"
             >
               <div className="relative cursor-pointer overflow-hidden rounded-xl shadow-sm">
-                {index === 0 ? (
+                {index === 0 && !isMobile ? (
                   <motion.div
                     ref={(node) => {
                       imagesRef.current[index] = node
@@ -185,19 +187,21 @@ export default function Portfolio() {
                   />
                 )}
 
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  variants={{ hover: { opacity: 1 }, tap: { opacity: 1 } }}
-                  transition={{ duration: 0.4, ease: 'easeOut' }}
-                  className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-[2px]"
-                >
-                  <button
-                    type="button"
-                    className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-zinc-900"
+                {!isMobile && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    variants={{ hover: { opacity: 1 }, tap: { opacity: 1 } }}
+                    transition={{ duration: 0.4, ease: 'easeOut' }}
+                    className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-[2px]"
                   >
-                    View Case Study
-                  </button>
-                </motion.div>
+                    <button
+                      type="button"
+                      className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-zinc-900"
+                    >
+                      View Case Study
+                    </button>
+                  </motion.div>
+                )}
               </div>
 
               <div className="px-1 pb-2 pt-5">

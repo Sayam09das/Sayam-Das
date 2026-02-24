@@ -37,6 +37,27 @@ export default function useAdvancedScrollEffects({
       const sections = gsap.utils.toArray('[data-scroll-section]')
       const layers = (bgLayerRefs.current || []).filter(Boolean)
 
+      if (isMobile) {
+        sections.forEach((section) => {
+          gsap.fromTo(
+            section,
+            { opacity: 0, y: 26 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.6,
+              ease: 'power3.out',
+              scrollTrigger: {
+                trigger: section,
+                start: 'top 86%',
+                toggleActions: 'play none none reverse',
+              },
+            },
+          )
+        })
+        return
+      }
+
       const setActiveLayer = (index) => {
         if (!layers.length) return
         const activeIndex = index % layers.length

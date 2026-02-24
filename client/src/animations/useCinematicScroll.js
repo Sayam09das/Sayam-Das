@@ -20,6 +20,8 @@ export default function useCinematicScroll({
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const isMobile = window.matchMedia('(max-width: 767px)').matches
+    if (isMobile) return undefined
+
     const enableHeavy = !prefersReducedMotion && !isMobile
 
     const ctx = gsap.context(() => {

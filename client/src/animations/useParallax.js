@@ -9,8 +9,12 @@ export default function useParallax({ sectionRef, sparklesRef, wavesRef }) {
     if (!sectionRef.current) {
       return undefined
     }
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const isMobile = window.matchMedia('(max-width: 767px)').matches
 
     const ctx = gsap.context(() => {
+      if (reduceMotion || isMobile) return
+
       const triggerConfig = {
         trigger: sectionRef.current,
         start: 'top 80%',

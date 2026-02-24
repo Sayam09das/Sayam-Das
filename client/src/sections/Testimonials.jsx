@@ -31,12 +31,12 @@ export default function Testimonials() {
     <section
       id="testimonials"
       ref={sectionRef}
-      className="bg-[#F5F6ED] px-6 py-20 transition-colors duration-300 dark:bg-[#0F0F0F] md:px-10 md:py-24 lg:px-[60px] lg:py-32 2xl:px-[120px]"
+      className="bg-[linear-gradient(160deg,#141414_0%,#1D1D1D_52%,#111111_100%)] px-6 py-20 text-white transition-colors duration-300 dark:bg-[linear-gradient(160deg,#0F0F0F_0%,#151515_52%,#0E0E0E_100%)] md:px-10 md:py-24 lg:px-[60px] lg:py-32 2xl:px-[120px]"
     >
       <div className="mx-auto max-w-[1440px]">
         <div data-reveal className="mx-auto mb-16 max-w-[680px] text-center">
-          <h2 className="text-3xl font-bold text-zinc-900 dark:text-white md:text-4xl lg:text-5xl">Testimonials</h2>
-          <p className="mt-5 text-base text-zinc-600 dark:text-[#BBBBBB] md:text-lg">
+          <h2 className="text-3xl font-bold text-white md:text-4xl lg:text-5xl">Testimonials</h2>
+          <p className="mt-5 text-base text-zinc-300 md:text-lg">
             Feedback from teams and founders I have partnered with across product, brand, and growth projects.
           </p>
         </div>
@@ -48,12 +48,12 @@ export default function Testimonials() {
               data-reveal
               whileHover={{ y: -6 }}
               transition={{ duration: 0.25, ease: 'easeOut' }}
-              className="rounded-2xl border border-[#E2E8C0] bg-[#EEF2D3] p-8 shadow-sm transition-colors duration-300 dark:border-[#2A2A2A] dark:bg-[#1A1A1A]"
+              className="rounded-2xl border border-white/12 bg-white/5 p-8 shadow-sm backdrop-blur-md"
             >
-              <p className="text-sm leading-7 text-zinc-700 dark:text-[#BBBBBB]">“{item.quote}”</p>
+              <p className="text-sm leading-7 text-zinc-200">“{item.quote}”</p>
               <div className="mt-6">
-                <p className="text-sm font-semibold text-zinc-900 dark:text-white">{item.name}</p>
-                <p className="text-xs uppercase tracking-[0.12em] text-zinc-500 dark:text-[#BBBBBB]">{item.role}</p>
+                <p className="text-sm font-semibold text-white">{item.name}</p>
+                <p className="text-xs uppercase tracking-[0.12em] text-zinc-400">{item.role}</p>
               </div>
             </motion.article>
           ))}

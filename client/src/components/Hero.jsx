@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import HeroLeft from './HeroLeft'
 import HeroRight from './HeroRight'
-import DecorativeElements from './DecorativeElements'
+import DecorativeElements from './Decorativeelements'
 import useHeroScrollAnimation from '../animations/useHeroScrollAnimation'
 import useParallax from '../animations/useParallax'
 

@@ -12,6 +12,7 @@ import useLenis from './animations/useLenis'
 import useAdvancedScrollEffects from './animations/useAdvancedScrollEffects'
 import useScrollVelocity from './animations/useScrollVelocity'
 import useScrollManager from './animations/useScrollManager'
+import useIsMobile from './hooks/useIsMobile'
 
 const Hero = lazy(() => import('./sections/Hero'))
 const CinematicSection = lazy(() => import('./sections/CinematicSection'))
@@ -32,10 +33,11 @@ export default function App() {
   const progressRef = useRef(null)
   const bgLayerRefs = useRef([])
   const floatingRefs = useRef([])
+  const isMobile = useIsMobile()
 
   const { isScrollLocked, unlockScroll } = useScrollManager({ initialLocked: true })
 
-  useLenis({ paused: isScrollLocked })
+  useLenis({ paused: isScrollLocked || isMobile })
   useAdvancedScrollEffects({ progressRef, bgLayerRefs, floatingRefs })
   useScrollVelocity()
 
@@ -45,16 +47,18 @@ export default function App() {
   }, [unlockScroll])
 
   return (
-    <div className="min-h-screen bg-[#F5F6ED] text-zinc-900 transition-colors duration-300 dark:bg-[#0F0F0F] dark:text-white">
+    <div className="min-h-screen bg-[#F5F6ED] text-[#111111] transition-colors duration-300 dark:bg-[#121212] dark:text-white">
       {loading && <SimpleLoader onComplete={handleLoaderComplete} duration={1200} />}
-      <CursorGlow />
+      {!isMobile && <CursorGlow />}
 
       {loading ? (
         <div className="pointer-events-none fixed inset-0 -z-30 bg-black" />
-      ) : (
+      ) : !isMobile ? (
         <WebGLBackground introProgress={1} paused={false} />
+      ) : (
+        <div className="pointer-events-none fixed inset-0 -z-30 bg-[radial-gradient(circle_at_20%_18%,rgba(198,245,77,0.18),transparent_42%),linear-gradient(180deg,#F5F6ED_0%,#EEF2D3_58%,#F5F6ED_100%)] dark:bg-[linear-gradient(180deg,#121212_0%,#171717_100%)]" />
       )}
-      <WebGLNavigationTransition enabled={!loading} />
+      <WebGLNavigationTransition enabled={!loading && !isMobile} />
 
       <div className="pointer-events-none fixed inset-0 -z-20">
         <div
@@ -87,19 +91,19 @@ export default function App() {
         ref={(node) => {
           floatingRefs.current[0] = node
         }}
-        className="pointer-events-none fixed left-8 top-[24%] z-[5] h-28 w-28 rounded-full bg-[#C6F54D]/20 blur-xl dark:bg-violet-500/10"
+        className="pointer-events-none fixed left-8 top-[24%] z-[5] hidden h-28 w-28 rounded-full bg-[#C6F54D]/20 blur-xl md:block dark:bg-[#C6F54D]/8"
       />
       <div
         ref={(node) => {
           floatingRefs.current[1] = node
         }}
-        className="pointer-events-none fixed bottom-[20%] right-10 z-[5] h-24 w-24 rounded-full bg-[#B8E93A]/18 blur-xl dark:bg-sky-500/10"
+        className="pointer-events-none fixed bottom-[20%] right-10 z-[5] hidden h-24 w-24 rounded-full bg-[#B8E93A]/18 blur-xl md:block dark:bg-[#B8E93A]/8"
       />
       <div
         ref={(node) => {
           floatingRefs.current[2] = node
         }}
-        className="pointer-events-none fixed right-[42%] top-[68%] z-[5] h-20 w-20 rounded-full bg-amber-200/20 blur-xl dark:bg-amber-400/10"
+        className="pointer-events-none fixed right-[42%] top-[68%] z-[5] hidden h-20 w-20 rounded-full bg-amber-200/20 blur-xl md:block dark:bg-amber-400/10"
       />
 
       <SEO />
@@ -128,9 +132,11 @@ export default function App() {
             <PageWrapper sectionKey="portfolio">
               <Portfolio />
             </PageWrapper>
-            <PageWrapper sectionKey="horizontal-scroll">
-              <HorizontalScroll />
-            </PageWrapper>
+            {!isMobile && (
+              <PageWrapper sectionKey="horizontal-scroll">
+                <HorizontalScroll />
+              </PageWrapper>
+            )}
             <PageWrapper sectionKey="process">
               <Process />
             </PageWrapper>

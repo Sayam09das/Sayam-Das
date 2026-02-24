@@ -1,11 +1,14 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import CircularBadge from './CircularBadge'
+import CircularBadge from './Circularbadge'
+import useIsMobile from '../hooks/useIsMobile'
 
 export default function HeroRight({ portraitRef, badgeRef }) {
+  const isMobile = useIsMobile()
   const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0 })
 
   const handleMove = (event) => {
+    if (isMobile) return
     const rect = event.currentTarget.getBoundingClientRect()
     const relativeX = (event.clientX - rect.left) / rect.width
     const relativeY = (event.clientY - rect.top) / rect.height
@@ -31,12 +34,12 @@ export default function HeroRight({ portraitRef, badgeRef }) {
       <motion.div
         onMouseMove={handleMove}
         onMouseLeave={resetTilt}
-        animate={tilt}
+        animate={isMobile ? { rotateX: 0, rotateY: 0 } : tilt}
         transition={{ type: 'spring', stiffness: 160, damping: 18 }}
         className="w-[280px] will-change-transform [transform-style:preserve-3d] sm:w-[300px] md:w-[380px] lg:w-[480px] xl:w-[520px]"
         style={{ perspective: '1200px' }}
       >
-        <div className="overflow-hidden rounded-[140px_140px_18px_18px] border border-zinc-900/10 bg-[linear-gradient(160deg,#d7d4ff_0%,#bfdcfd_52%,#f5f7ff_100%)] shadow-[0_28px_80px_rgba(38,44,85,0.24)] dark:border-[#2A2A2A] dark:bg-[#1A1A1A] lg:rounded-[190px_190px_18px_18px]">
+        <div className="overflow-hidden rounded-[140px_140px_18px_18px] border border-[#E2E8C0] bg-[linear-gradient(160deg,#EEF2D3_0%,#F5F6ED_52%,#ECF4C8_100%)] shadow-[0_28px_80px_rgba(90,110,28,0.16)] dark:border-[#2A2A2A] dark:bg-[#1A1A1A] lg:rounded-[190px_190px_18px_18px]">
           <img
             src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&fm=webp&w=1200&q=80"
             alt="Portrait"

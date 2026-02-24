@@ -13,6 +13,7 @@ import {
   Wind,
 } from 'lucide-react'
 import useSkillsAnimation from '../animations/useSkillsAnimation'
+import useIsMobile from '../hooks/useIsMobile'
 
 const skills = [
   { icon: Atom, title: 'React', desc: 'Component architecture and scalable frontend systems.', years: '5+ years', progress: 95 },
@@ -27,6 +28,7 @@ const skills = [
 ]
 
 export default function Skills() {
+  const isMobile = useIsMobile()
   const sectionRef = useRef(null)
   const headingRef = useRef(null)
   const cardRefs = useRef([])
@@ -36,14 +38,7 @@ export default function Skills() {
 
   useSkillsAnimation({ sectionRef, headingRef, cardRefs, barRefs, countRefs, bgRef })
 
-  const hover = useMemo(
-    () => ({
-      y: -8,
-      rotateX: 4,
-      transition: { duration: 0.3, ease: 'easeOut' },
-    }),
-    [],
-  )
+  const hover = useMemo(() => ({ y: -8, transition: { duration: 0.3, ease: 'easeOut' } }), [])
 
   return (
     <section
@@ -75,9 +70,9 @@ export default function Skills() {
               ref={(node) => {
                 cardRefs.current[index] = node
               }}
-              whileHover={hover}
+              whileHover={isMobile ? undefined : hover}
               whileTap={{ scale: 0.98 }}
-              className="group rounded-2xl border border-[#E2E8C0] bg-[#EEF2D3] p-7 shadow-sm will-change-transform [transform-style:preserve-3d] transition-colors duration-300 hover:border-[#B8E93A] hover:shadow-[0_20px_50px_rgba(184,233,58,0.2)] dark:border-[#2A2A2A] dark:bg-[#1A1A1A]"
+              className={`group rounded-2xl border border-[#E2E8C0] bg-[#EEF2D3] p-7 shadow-sm will-change-transform transition-colors duration-300 hover:border-[#B8E93A] hover:shadow-[0_20px_50px_rgba(184,233,58,0.2)] dark:border-[#2A2A2A] dark:bg-[#1A1A1A] ${isMobile ? '' : '[transform-style:preserve-3d]'}`}
             >
               <motion.div
                 whileHover={{ scale: 1.08 }}
