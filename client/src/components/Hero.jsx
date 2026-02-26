@@ -3,6 +3,7 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { initHeroAnimation } from '../animations/heroAnimation'
 import { WordRotate } from './ui/word-rotate'
 import { Typewriter } from './ui/typewriter'
+import { NumberTicker } from './ui/number-ticker'
 
 /* ─────────────────────────────────────────────────────────────────
    SPRING / EASING CONFIGS
@@ -68,15 +69,6 @@ const metaItem = {
   animate: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE_OUT } },
 }
 
-// Floating card slides in from right (initial y already '-50%' via style)
-const floatCardVariants = {
-  initial: { opacity: 0, x: 64 },
-  animate: {
-    opacity: 1, x: 0,
-    transition: { duration: 0.9, ease: EASE_OUT, delay: 1.7 },
-  },
-}
-
 // Corner number
 const cornerVariants = {
   initial: { opacity: 0, y: 24 },
@@ -124,10 +116,6 @@ export default function Hero({ lenis = null }) {
   // Background layer   (slowest)
   const bgX = useTransform(smoothX, [-1, 1], [-18, 18])
   const bgY = useTransform(smoothY, [-1, 1], [-12, 12])
-
-  // Float card         (medium)
-  const cardX = useTransform(smoothX, [-1, 1], [-10, 10])
-  const cardY = useTransform(smoothY, [-1, 1], [-8, 8])
 
   // Corner number      (fastest)
   const cornerX = useTransform(smoothX, [-1, 1], [-6, 6])
@@ -207,15 +195,45 @@ export default function Hero({ lenis = null }) {
           background-size: 160px 160px;
         }
 
-        @media (prefers-reduced-motion: reduce) {
-          .badge-dot-pulse, .scanline-drift, .float-dot-pulse { animation: none !important; }
+        /* FIX: Correct headline sizing across breakpoints */
+        .hero-headline {
+          font-size: clamp(38px, 8vw, 100px);
         }
-
-        /* Laptop specific font size */
         @media (min-width: 1024px) and (max-width: 1440px) {
           .hero-headline {
-            font-size: 54px !important;
+            font-size: clamp(48px, 5.5vw, 72px);
           }
+        }
+        @media (max-width: 640px) {
+          .hero-headline {
+            font-size: 42px;
+          }
+        }
+
+        /* FIX: Meta stats wrap nicely on small screens */
+        @media (max-width: 640px) {
+          .hero-meta {
+            justify-content: center;
+          }
+          .hero-meta .meta-divider-sm {
+            display: none;
+          }
+        }
+
+        /* FIX: CTAs stack on very small screens */
+        @media (max-width: 420px) {
+          .hero-ctas {
+            flex-direction: column;
+            width: 100%;
+          }
+          .hero-ctas button {
+            width: 100%;
+            justify-content: center;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .badge-dot-pulse, .scanline-drift, .float-dot-pulse { animation: none !important; }
         }
       `}</style>
 
@@ -358,12 +376,13 @@ export default function Hero({ lenis = null }) {
       </motion.div>
 
       {/* ══════════════════════════════════════════════════════
-          MAIN CONTENT — centered in middle area
+          MAIN CONTENT — centered layout
       ══════════════════════════════════════════════════════ */}
       <motion.div
-        className="relative z-10 w-full max-w-[1200px] flex flex-col items-center text-center"
+        className="relative z-10 w-full max-w-[900px] mx-auto flex flex-col items-center text-center px-5 sm:px-8 md:px-12"
         style={{
-          padding: 'clamp(80px,12vw,120px) clamp(20px,6vw,80px)',
+          paddingTop: 'clamp(80px,12vw,120px)',
+          paddingBottom: 'clamp(80px,12vw,120px)',
         }}
         variants={contentContainer}
         initial="initial"
@@ -372,7 +391,7 @@ export default function Hero({ lenis = null }) {
 
         {/* ── Badge ── */}
         <motion.div
-          className="inline-flex items-center gap-2 py-[5px] pr-[14px] pl-[10px] rounded-full backdrop-blur-xl cursor-default mb-7"
+          className="inline-flex items-center gap-2 py-[5px] pr-[14px] pl-[10px] rounded-full backdrop-blur-xl cursor-default mb-6"
           style={{
             border: '1px solid rgba(96,165,250,0.22)',
             background: 'rgba(96,165,250,0.06)',
@@ -397,7 +416,7 @@ export default function Hero({ lenis = null }) {
 
         {/* ── Eyebrow ── */}
         <motion.p
-          className="font-dm font-normal tracking-[0.22em] uppercase text-white/50 mb-[18px] hidden sm:block"
+          className="font-dm font-normal tracking-[0.22em] uppercase text-white/50 mb-5 hidden sm:block"
           style={{ fontSize: 'clamp(11px,1.4vw,13px)' }}
           variants={fadeUp}
         >
@@ -410,18 +429,18 @@ export default function Hero({ lenis = null }) {
 
         {/* ── Headline ── */}
         <motion.div
-          className="mb-[clamp(18px,7vw,28px)] text-center"
-          style={{ perspective: '900px', maxWidth: '28ch' }}
+          className="mb-[clamp(18px,4vw,32px)] w-full"
+          style={{ perspective: '900px' }}
           variants={titleVariants}
         >
           <h1
-            className="hero-headline font-instrument font-normal leading-[0.95] tracking-[-0.025em] text-white inline-block"
-            style={{ fontSize: 'clamp(70px,4vw,60px)' }}
+            className="hero-headline font-instrument font-normal leading-[1.0] tracking-[-0.025em] text-white text-center"
             aria-label="Craft digital experiences that inspire"
           >
-            <span className="block mb-1 pl-[2rem]">Craft digital</span>
-            <span className="block mb-1 pl-[0.5rem]">experiences that</span>
-            <span className="block">
+            {/* FIX: removed broken pl-[] offsets; natural center alignment */}
+            <span className="block">Craft digital</span>
+            <span className="block">experiences that</span>
+            <span className="block mt-1">
               <WordRotate
                 words={['inspire', 'engage', 'transform', 'captivate']}
                 duration={2500}
@@ -433,8 +452,8 @@ export default function Hero({ lenis = null }) {
 
         {/* ── Subline ── */}
         <motion.p
-          className="font-dm font-light leading-[1.65] text-white/50 max-w-[48ch] mb-[clamp(32px,5vw,52px)] tracking-[0.005em]"
-          style={{ fontSize: 'clamp(15px,2vw,19px)' }}
+          className="font-dm font-light leading-[1.65] text-white/50 max-w-[46ch] mb-[clamp(32px,5vw,52px)] tracking-[0.005em] text-center"
+          style={{ fontSize: 'clamp(15px,1.8vw,18px)' }}
           variants={fadeUp}
         >
           I design and engineer premium interfaces — cinematic motion, obsessive detail, and architecture built to scale.
@@ -442,7 +461,7 @@ export default function Hero({ lenis = null }) {
 
         {/* ── CTAs ── */}
         <motion.div
-          className="flex flex-wrap items-center gap-3.5 mb-[clamp(48px,8vw,80px)]"
+          className="hero-ctas flex flex-wrap justify-center items-center gap-3 mb-[clamp(40px,7vw,72px)] w-full"
           variants={fadeUp}
         >
           {/* Primary */}
@@ -505,30 +524,32 @@ export default function Hero({ lenis = null }) {
 
         {/* ── Meta stats ── */}
         <motion.div
-          className="flex flex-wrap gap-x-10 gap-y-6 items-start"
+          className="hero-meta flex flex-wrap justify-center gap-x-8 gap-y-5 items-start w-full"
           variants={{
             initial: {},
             animate: { transition: { staggerChildren: 0.1 } },
           }}
         >
           {[
-            { value: '6+', suffix: '', label: 'Years experience' },
+            { value: 6, suffix: '+', label: 'Years experience', delay: 0 },
             null,
-            { value: '40', suffix: '+', label: 'Products shipped' },
+            { value: 40, suffix: '+', label: 'Products shipped', delay: 0.2 },
             null,
-            { value: '99', suffix: '%', label: 'Client satisfaction' },
+            { value: 99, suffix: '%', label: 'Client satisfaction', delay: 0.4 },
+            null,
+            { value: 15, suffix: '+', label: 'Global clients', delay: 0.6 },
           ].map((item, i) =>
             item === null ? (
               <motion.div
                 key={i}
-                className="w-px h-8 self-center bg-white/[0.08] hidden sm:block"
+                className="meta-divider-sm w-px h-8 self-center bg-white/[0.08] hidden sm:block"
                 variants={metaItem}
                 aria-hidden="true"
               />
             ) : (
               <motion.div
                 key={i}
-                className="flex flex-col gap-[3px]"
+                className="flex flex-col items-center gap-[3px]"
                 variants={metaItem}
                 whileHover={{ y: -3, transition: { duration: 0.2 } }}
               >
@@ -536,10 +557,14 @@ export default function Hero({ lenis = null }) {
                   className="font-instrument font-normal leading-none tracking-[-0.02em] text-white"
                   style={{ fontSize: 'clamp(22px,3vw,30px)' }}
                 >
-                  {item.value}
+                  <NumberTicker
+                    value={item.value}
+                    delay={item.delay}
+                    className="text-white"
+                  />
                   <span className="grad-text-sm">{item.suffix}</span>
                 </span>
-                <span className="font-dm text-[11px] font-normal tracking-[0.1em] uppercase text-white/30">
+                <span className="font-dm text-[11px] font-normal tracking-[0.1em] uppercase text-white/30 text-center">
                   {item.label}
                 </span>
               </motion.div>
