@@ -10,10 +10,10 @@ function useLenis() {
     useEffect(() => {
         const lenis = new Lenis({
             duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             smooth: true,
-        });
-        function raf(time) {
+        } as any);
+        function raf(time: number) {
             lenis.raf(time);
             requestAnimationFrame(raf);
         }
@@ -33,7 +33,7 @@ const fadeUp = {
     hidden: { opacity: 0, y: 32 },
     show: (i = 0) => ({
         opacity: 1, y: 0,
-        transition: { delay: i * 0.11, duration: 0.65, ease: [0.22, 1, 0.36, 1] },
+        transition: { delay: i * 0.11, duration: 0.65, ease: [0.22, 1, 0.36, 1] as const },
     }),
 };
 
@@ -41,7 +41,7 @@ const fadeLeft = {
     hidden: { opacity: 0, x: -20 },
     show: (i = 0) => ({
         opacity: 1, x: 0,
-        transition: { delay: 0.3 + i * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+        transition: { delay: 0.3 + i * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] as const },
     }),
 };
 

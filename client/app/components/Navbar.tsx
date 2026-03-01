@@ -19,11 +19,11 @@ function useLenis() {
     useEffect(() => {
         const lenis = new Lenis({
             duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             smooth: true,
         } as any);
 
-        function raf(time) {
+        function raf(time: number) {
             lenis.raf(time);
             requestAnimationFrame(raf);
         }
@@ -35,10 +35,10 @@ function useLenis() {
 
 // ─── Nav links data ───────────────────────────────────────────────────────────
 const NAV_LINKS = [
-    { label: "Services", icon: Briefcase, href: "/services" },
-    { label: "Projects", icon: FolderOpen, href: "/projects" },
-    { label: "Skiils", icon: Mail, href: "/skills" },
-    { label: "Contact", icon: Star, href: "/contact" },
+    { label: "Services", icon: Briefcase, href: "/#services" },
+    { label: "Projects", icon: FolderOpen, href: "/#projects" },
+    { label: "Skiils", icon: Mail, href: "/#skills" },
+    { label: "Contact", icon: Star, href: "/#contact" },
 ];
 
 // ─── Navbar component ─────────────────────────────────────────────────────────
