@@ -133,7 +133,7 @@ const containerVariants = {
 
 const featureVariants = {
     hidden: { opacity: 0, x: -16 },
-    show: { opacity: 1, x: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } },
+    show: { opacity: 1, x: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const } },
 };
 
 const slideVariants = {
@@ -146,13 +146,13 @@ const slideVariants = {
         x: 0,
         opacity: 1,
         scale: 1,
-        transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+        transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as const },
     },
     exit: (dir: number) => ({
         x: dir > 0 ? -120 : 120,
         opacity: 0,
         scale: 0.97,
-        transition: { duration: 0.38, ease: [0.22, 1, 0.36, 1] },
+        transition: { duration: 0.38, ease: [0.22, 1, 0.36, 1] as const },
     }),
 };
 
@@ -174,7 +174,7 @@ function TechBadge({ logo, index }: { logo: TechLogo; index: number }) {
             transition={{
                 delay: 0.06 * index,
                 duration: 0.6,
-                ease: [0.22, 1, 0.36, 1],
+                ease: [0.22, 1, 0.36, 1] as const,
             }}
         >
             <motion.div
@@ -278,7 +278,7 @@ function ServiceSlide({ service, dark }: { service: Service; dark: boolean }) {
                 initial={{ opacity: 0, x: -24 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -16 }}
-                transition={{ duration: 0.52, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.52, ease: [0.22, 1, 0.36, 1] as const }}
             >
                 {/* Accent bar */}
                 <motion.div
@@ -290,7 +290,7 @@ function ServiceSlide({ service, dark }: { service: Service; dark: boolean }) {
                     }}
                     initial={{ scaleX: 0, originX: 0 }}
                     animate={{ scaleX: 1 }}
-                    transition={{ delay: 0.1, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{ delay: 0.1, duration: 0.45, ease: [0.22, 1, 0.36, 1] as const }}
                 />
 
                 <h3
@@ -400,7 +400,7 @@ function ServiceSlide({ service, dark }: { service: Service; dark: boolean }) {
                 initial={{ opacity: 0, scale: 0.95, x: 28 }}
                 animate={{ opacity: 1, scale: 1, x: 0 }}
                 exit={{ opacity: 0, scale: 0.97 }}
-                transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] as const }}
                 style={{ width: "100%" }}
             >
                 <ParallaxImage src={service.imageUrl} alt={service.imageAlt} />
@@ -586,7 +586,7 @@ export default function Services() {
                                         width: i === current ? 22 : 7,
                                         background: i === current ? textMain : textMuted,
                                     }}
-                                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] as const }}
                                     style={{
                                         height: 7,
                                         borderRadius: 9999,
@@ -629,7 +629,7 @@ export default function Services() {
                     <motion.div
                         initial={{ opacity: 0, y: 28 }}
                         animate={isInView ? { opacity: 1, y: 0 } : {}}
-                        transition={{ delay: 0.28, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                        transition={{ delay: 0.28, duration: 0.6, ease: [0.22, 1, 0.36, 1] as const }}
                         style={{
                             background: cardBg,
                             border: `1px solid ${border}`,
@@ -688,7 +688,7 @@ export default function Services() {
                         initial={{ scaleX: 0, originX: 0 }}
                         whileInView={{ scaleX: 1 }}
                         viewport={{ once: true }}
-                        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+                        transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] as const }}
                         aria-hidden="true"
                     />
 

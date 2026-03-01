@@ -238,7 +238,7 @@ function FeaturedCard({ t, dark }: { t: Testimonial; dark: boolean }) {
                 ref={(el) => { (tiltRef as any).current = el; }}
                 initial={{ opacity: 0, y: 48, scale: 0.94 }}
                 animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
-                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] as const }}
                 style={{
                     rotateX: springRX,
                     rotateY: springRY,
@@ -433,7 +433,7 @@ function MiniCard({ t, index, dark }: { t: Testimonial; index: number; dark: boo
             <motion.div
                 initial={{ opacity: 0, y: 32, scale: 0.95 }}
                 animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
-                transition={{ delay: index * 0.08, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ delay: index * 0.08, duration: 0.65, ease: [0.22, 1, 0.36, 1] as const }}
                 style={{ x: springX, y: springY }}
                 onMouseEnter={() => setHovered(true)}
                 onMouseLeave={() => setHovered(false)}
@@ -583,7 +583,7 @@ function StatPill({ stat, index, dark }: { stat: typeof STATS[0]; index: number;
             ref={ref}
             initial={{ opacity: 0, scale: 0.85, y: 16 }}
             animate={inView ? { opacity: 1, scale: 1, y: 0 } : {}}
-            transition={{ delay: index * 0.09, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ delay: index * 0.09, duration: 0.6, ease: [0.22, 1, 0.36, 1] as const }}
             whileHover={{ y: -4, scale: 1.04 }}
             style={{
                 background: dark ? "#161614" : "#ffffff",
@@ -699,13 +699,12 @@ function Carousel({ dark }: { dark: boolean }) {
 
             {/* Slide */}
             <div style={{ overflow: "hidden", borderRadius: 20 }}>
-                <AnimatePresence mode="wait" custom={dir}>
+                <AnimatePresence mode="wait">
                     <motion.div
                         key={current}
-                        custom={dir}
-                        initial={(d) => ({ x: d > 0 ? 80 : -80, opacity: 0, scale: 0.97 })}
-                        animate={{ x: 0, opacity: 1, scale: 1, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } }}
-                        exit={(d) => ({ x: d > 0 ? -80 : 80, opacity: 0, scale: 0.97, transition: { duration: 0.35 } })}
+                        initial={{ x: dir > 0 ? 80 : -80, opacity: 0, scale: 0.97 }}
+                        animate={{ x: 0, opacity: 1, scale: 1, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as const } }}
+                        exit={{ x: dir > 0 ? -80 : 80, opacity: 0, scale: 0.97, transition: { duration: 0.35 } }}
                     >
                         <FeaturedCard t={TESTIMONIALS[current]} dark={dark} />
                     </motion.div>
@@ -963,7 +962,7 @@ export default function Testimonials() {
                         initial={{ scaleX: 0, originX: 0 }}
                         whileInView={{ scaleX: 1 }}
                         viewport={{ once: true }}
-                        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+                        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] as const }}
                         style={{ height: 1, background: border, marginBottom: "clamp(32px, 5vw, 52px)" }}
                     />
 
