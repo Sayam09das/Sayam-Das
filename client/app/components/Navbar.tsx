@@ -28,7 +28,7 @@ export default function Navbar() {
 
     const [scrolled, setScrolled] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
-    const [isDark, setIsDark] = useState(false);
+    // isDark removed - theme managed globally
     const [active, setActive] = useState("Home");
 
     // Scroll listener for glass blur effect
@@ -38,29 +38,7 @@ export default function Navbar() {
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
-    // Auto dark mode based on time (manual toggle priority)
-    useEffect(() => {
-        const savedTheme = localStorage.getItem("theme");
-        const hour = new Date().getHours();
-        const timeDark = hour >= 18 || hour < 6;
-        const shouldDark = savedTheme ? savedTheme === "dark" : timeDark;
-
-        document.documentElement.classList.toggle('dark', shouldDark);
-        setIsDark(shouldDark);
-
-        const listener = () => {
-            const currentSaved = localStorage.getItem("theme");
-            if (!currentSaved) { // Only auto if no manual preference
-                const h = new Date().getHours();
-                const newDark = h >= 18 || h < 6;
-                document.documentElement.classList.toggle('dark', newDark);
-                setIsDark(newDark);
-            }
-        };
-        const interval = setInterval(listener, 60000);
-
-        return () => clearInterval(interval);
-    }, []);
+    // Theme management handled by TimeBasedThemeManager in layout.tsx
 
     // Close mobile menu on resize
     useEffect(() => {
