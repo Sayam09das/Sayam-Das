@@ -50,6 +50,29 @@ function StatCard({
     const ref = useRef<HTMLDivElement>(null);
     const inView = useInView(ref, { once: true, margin: "-30px" });
     const Icon = stat.icon;
+    const [count, setCount] = useState(0);
+    const target = parseFloat(stat.value.replace(/[+%]/g, '')) || 0;
+    const suffix = stat.value.includes('%') ? '%' : stat.value.includes('+') ? '+' : '';
+
+    useEffect(() => {
+        if (inView) {
+            const timer = setTimeout(() => {
+                let current = 0;
+                const increment = target / 60; // ~1s at 60fps
+                const update = () => {
+                    current += increment;
+                    if (current < target) {
+                        setCount(Math.floor(current));
+                        requestAnimationFrame(update);
+                    } else {
+                        setCount(Math.floor(target));
+                    }
+                };
+                update();
+            }, 200);
+            return () => clearTimeout(timer);
+        }
+    }, [inView, target]);
 
     return (
         <motion.div
@@ -98,7 +121,7 @@ function StatCard({
                     transition: "color 0.35s",
                 }}
             >
-                {stat.value}
+                {count.toLocaleString()}{suffix}
             </div>
             <div
                 style={{
@@ -445,18 +468,13 @@ export default function About() {
                         <div style={{ flex: 1, height: 1, background: border }} />
                     </motion.div>
 
-                    {/* ── Stats row ── */}
-                    <div className="stats-grid" style={{ marginBottom: "clamp(36px, 6vw, 64px)" }}>
-                        {STATS.map((s, i) => (
-                            <StatCard key={s.label} stat={s} index={i} dark={dark} />
-                        ))}
-                    </div>
-
                     {/* ── Main 2-col grid ── */}
                     <div className="about-grid">
 
                         {/* Left: text content */}
                         <div>
+
+
                             {/* Bio */}
                             <motion.div
                                 initial={{ opacity: 0, y: 28 }}
@@ -615,6 +633,14 @@ export default function About() {
                         </div>
 
                     </div>
+
+                    {/* Stats after image */}
+                    <div className="stats-grid" style={{ marginTop: "clamp(48px, 8vw, 80px)" }}>
+                        {STATS.map((s, i) => (
+                            <StatCard key={s.label} stat={s} index={i} dark={dark} />
+                        ))}
+                    </div>
+
                 </div>
             </section>
         </>

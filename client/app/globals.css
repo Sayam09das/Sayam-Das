@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Funnel+Display:wght@300..800&family=Yanone+Kaffeesatz:wght@200..700&display=swap');
-@import "tailwindcss";
+/* @import "tailwindcss"; */
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
@@ -133,13 +133,35 @@
     --scroll-progress: 0;
 }
 
+html {
+  transition: color 0.25s ease, background-color 0.25s ease, border-color 0.25s ease;
+}
+
 html,
 body {
     min-height: 100%;
 }
 
 body {
-    position: relative;
+    position: relative !important;
+    overflow-x: hidden;
+}
+
+html.has-scroll-smooth {
+  scroll-behavior: smooth !important;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
 }
 
 .site-shell {

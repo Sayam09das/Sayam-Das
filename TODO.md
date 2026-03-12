@@ -1,15 +1,17 @@
-# Task: Update Footer and Remove Telegram Links
+# Theme Animation Fix Progress
 
-## Plan Steps:
-- [x] Step 1: Update Footer.tsx - Remove Telegram, update GitHub/LinkedIn URLs, update email placeholder
-- [x] Step 2: Update About.tsx - Remove Telegram social link
-- [x] Step 3: Update Contact.tsx - Replace Telegram with Email
-- [x] Step 4: Search and clean other pages if needed (no more Telegram found)
-- [x] Step 5: Test changes
-- [ ] Complete task
+## Approved Plan
+- Replace Navbar manual theme toggle → AnimatedThemeToggler component
+- Remove duplicate logic/storage conflicts
+- Ensure ThemeContext Provider wraps app (layout.tsx)
+- Test animation/persistence/system sync
 
-Details used (please confirm):
-- GitHub: https://github.com/sayamdas
-- LinkedIn: https://www.linkedin.com/in/sayam-das-43a703287/
-- Email: hello@sayamd.as (placeholder, update if needed)
+## Steps [4/5] ✅
+- [x] Create TODO.md
+- [x] Edit Navbar.tsx: Import/use AnimatedThemeToggler, remove manual toggle/isDark/MutationObserver
+- [x] Check layout.tsx: Confirm `<ThemeProvider>` import/wrap
+- [x] Remove sr-only text from AnimatedThemeToggler (icons only)
+- [ ] Test locally: `cd client && npm run dev`, toggle theme, verify animation/smoothness/persistence
+- [ ] Cleanup: Align storage keys if needed, remove redundant observers in pages (optional)
+- [ ] Final verification across pages, attempt_completion
 

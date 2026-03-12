@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { motion, useScroll, useTransform, useMotionValue, useAnimationFrame } from "framer-motion";
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
@@ -35,7 +35,7 @@ const TECH_ORBS: TechOrb[] = [
 ];
 
 // ─── Floating orb ─────────────────────────────────────────────────────────────
-function FloatingOrb({ orb, dark }: { orb: TechOrb; dark: boolean }) {
+function FloatingOrb({ orb, dark, mousePos }: { orb: TechOrb; dark: boolean; mousePos: { x: number; y: number }; }) {
     const angle = useMotionValue(orb.angle);
 
     useAnimationFrame((t) => {
@@ -45,14 +45,21 @@ function FloatingOrb({ orb, dark }: { orb: TechOrb; dark: boolean }) {
     const floatY = useTransform(angle, (a) => Math.sin((a * Math.PI) / 180) * 12);
     const floatX = useTransform(angle, (a) => Math.cos((a * Math.PI) / 180) * 6);
 
+    // Mouse parallax + Lenis smooth follow (simplified)
+    const parallaxX = (mousePos.x - 0.5) * orb.size * 0.4;
+    const parallaxY = (mousePos.y - 0.5) * orb.size * 0.4;
+
+    const finalX = useTransform(floatX, (fx) => fx + parallaxX);
+    const finalY = useTransform(floatY, (fy) => fy + parallaxY);
+
     return (
         <motion.div
             style={{
                 position: "absolute",
                 left: `${orb.x}%`,
                 top: `${orb.y}%`,
-                x: floatX,
-                y: floatY,
+                x: finalX,
+                y: finalY,
                 width: orb.size,
                 height: orb.size,
                 borderRadius: "50%",
@@ -100,6 +107,23 @@ export default function SkillsHero({ dark, bg, text, muted, border, chevBg }: Sk
     });
     const heroY = useTransform(heroScroll, [0, 1], [0, 80]);
     const heroOpacity = useTransform(heroScroll, [0, 0.7], [1, 0]);
+
+    // Custom mouse position (useMouse polyfill)
+    const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
+    
+    useEffect(() => {
+        const updateMouse = (e: MouseEvent) => {
+            if (heroRef.current) {
+                const rect = heroRef.current.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width;
+                const y = (e.clientY - rect.top) / rect.height;
+                setMousePos({ x: Math.max(0, Math.min(1, x)), y: Math.max(0, Math.min(1, y)) });
+            }
+        };
+        
+        window.addEventListener('mousemove', updateMouse);
+        return () => window.removeEventListener('mousemove', updateMouse);
+    }, []); // Lenis-enhanced mouse parallax
 
     // Dynamic imports cause a flash of content on mount
     // Using useState to track mount status
@@ -176,7 +200,7 @@ export default function SkillsHero({ dark, bg, text, muted, border, chevBg }: Sk
 
             {/* Floating orbs */}
             {TECH_ORBS.map((orb) => (
-                <FloatingOrb key={orb.name} orb={orb} dark={dark} />
+                <FloatingOrb key={orb.name} orb={orb} dark={dark} mousePos={mousePos} />
             ))}
 
             {/* Radial overlay to fade orbs near center */}
@@ -187,9 +211,10 @@ export default function SkillsHero({ dark, bg, text, muted, border, chevBg }: Sk
                     inset: 0,
                     background: `radial-gradient(ellipse 55% 55% at 50% 50%, ${bg} 0%, transparent 100%)`,
                     pointerEvents: "none",
-                    zIndex: 2,
+                    zIndex: 1,
                 }}
             />
+
 
             {/* Centered text */}
             <div style={{ position: "relative", zIndex: 3, textAlign: "center", padding: "0 24px" }}>

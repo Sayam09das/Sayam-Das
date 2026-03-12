@@ -3,56 +3,53 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-    Home,
-    User2,
-    Briefcase,
-    FolderOpen,
-    Star,
-    Mail,
-    Menu,
-    X,
+  Home,
+  User2,
+  Briefcase,
+  FolderOpen,
+  Star,
+  Mail,
 } from "lucide-react";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
-
-// ─── Nav links data ───────────────────────────────────────────────────────────
 const NAV_LINKS = [
-{ label: "About", icon: User2, href: "/#about" },
-    { label: "Services", icon: Briefcase, href: "/#services" },
-    { label: "Projects", icon: FolderOpen, href: "/#projects" },
-    { label: "Skills", icon: Star, href: "/#skills" },
-    { label: "Contact", icon: Mail, href: "/#contact" },
+  { label: "About", icon: User2, href: "/#about" },
+  { label: "Services", icon: Briefcase, href: "/#services" },
+  { label: "Projects", icon: FolderOpen, href: "/#projects" },
+  { label: "Skills", icon: Star, href: "/#skills" },
+  { label: "Contact", icon: Mail, href: "/#contact" },
 ];
 
 // ─── Navbar component ─────────────────────────────────────────────────────────
 export default function Navbar() {
 
-    const [scrolled, setScrolled] = useState(false);
-    const [mobileOpen, setMobileOpen] = useState(false);
-    // isDark removed - theme managed globally
-    const [active, setActive] = useState("Home");
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [active, setActive] = useState("Home");
 
-    // Scroll listener for glass blur effect
-    useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 24);
-        window.addEventListener("scroll", onScroll, { passive: true });
-        return () => window.removeEventListener("scroll", onScroll);
-    }, []);
+  // Scroll listener for glass blur effect
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-    // Theme management handled by TimeBasedThemeManager in layout.tsx
 
-    // Close mobile menu on resize
-    useEffect(() => {
-        const onResize = () => {
-            if (window.innerWidth >= 768) setMobileOpen(false);
-        };
-        window.addEventListener("resize", onResize);
-        return () => window.removeEventListener("resize", onResize);
-    }, []);
 
-    return (
-        <>
-            {/* ── Global styles injected via style tag ───────────────────────── */}
-            <style>{`
+  // Close mobile menu on resize
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth >= 768) setMobileOpen(false);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+
+
+  return (
+    <>
+      {/* ── Global styles injected via style tag ───────────────────────── */}
+      <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap');
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -308,6 +305,12 @@ export default function Navbar() {
           flex-shrink: 0;
           outline: none;
         }
+        .theme-btn svg {
+          color: var(--text) !important;
+          stroke: currentColor !important;
+          width: 20px !important;
+          height: 20px !important;
+        }
 
         .theme-btn:hover {
           background: var(--pill-hover);
@@ -424,169 +427,134 @@ export default function Navbar() {
         }
       `}</style>
 
-            {/* ── Navbar ────────────────────────────────────────────────────── */}
-            <motion.nav
-                className={`nav-root${scrolled ? " scrolled" : ""}`}
-                initial={{ y: -80, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+      {/* ── Navbar ────────────────────────────────────────────────────── */}
+      <motion.nav
+        className={`nav-root${scrolled ? " scrolled" : ""}`}
+        initial={{ y: -80, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+      >
+        {/* Brand */}
+        <a className="brand" href="/">
+          <div className="avatar">
+            <span className="avatar-fallback">SD</span>
+          </div>
+          <div className="brand-divider" />
+          <span className="brand-name">
+            Sayam Das
+          </span>
+        </a>
+
+        {/* Center pill */}
+        <nav className="nav-pill" aria-label="Main navigation">
+          <a
+            href="/"
+            className={`nav-link${active === "Home" ? " active" : ""}`}
+            onClick={() => setActive("Home")}
+          >
+            {active === "Home" && (
+              <motion.span
+                className="nav-link-bg"
+                layoutId="active-pill"
+                transition={{ type: "spring", stiffness: 380, damping: 34 }}
+              />
+            )}
+            <span className="link-icon">
+              <Home size={13} strokeWidth={2.2} />
+            </span>
+            <span>Home</span>
+          </a>
+
+          {NAV_LINKS.map(({ label, icon: Icon, href }) => (
+            <a
+              key={label}
+              href={href}
+              className={`nav-link${active === label ? " active" : ""}`}
+              onClick={() => setActive(label)}
             >
-                {/* Brand */}
-                <a className="brand" href="/">
-                    <div className="avatar">
-                        <span className="avatar-fallback">SD</span>
-                    </div>
-                    <div className="brand-divider" />
-                    <span className="brand-name">
-                        Sayam Das
-                    </span>
-                </a>
+              {active === label && (
+                <motion.span
+                  className="nav-link-bg"
+                  layoutId="active-pill"
+                  transition={{ type: "spring", stiffness: 380, damping: 34 }}
+                />
+              )}
+              <span className="link-icon">
+                <Icon size={13} strokeWidth={2.2} />
+              </span>
+              <span>{label}</span>
+            </a>
+          ))}
+        </nav>
 
-                {/* Center pill */}
-                <nav className="nav-pill" aria-label="Main navigation">
-<a
-                            href="/"
-                            className={`nav-link${active === "Home" ? " active" : ""}`}
-                            onClick={() => setActive("Home")}
-                        >
-                            {active === "Home" && (
-                                <motion.span
-                                    className="nav-link-bg"
-                                    layoutId="active-pill"
-                                    transition={{ type: "spring", stiffness: 380, damping: 34 }}
-                                />
-                            )}
-                            <span className="link-icon">
-                                <Home size={13} strokeWidth={2.2} />
-                            </span>
-                            <span>Home</span>
-                        </a>
+        {/* Right cluster */}
+        <div className="right-cluster">
+          <AnimatedThemeToggler className="theme-btn" />
+          <a href="#contact" className="work-btn" tabIndex={0}>
+            <span className="dot"></span>
+            Open to work
+          </a>
+          <button className="menu-btn" aria-label="Toggle menu">
+            <span style={{ display: "flex", opacity: 1, transform: "none" }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-menu" aria-hidden="true">
+                <path d="M4 5h16"></path>
+                <path d="M4 12h16"></path>
+                <path d="M4 19h16"></path>
+              </svg>
+            </span>
+          </button>
+        </div>
+      </motion.nav>
 
-                    {NAV_LINKS.map(({ label, icon: Icon, href }) => (
-                        <a
-                            key={label}
-                            href={href}
-                            className={`nav-link${active === label ? " active" : ""}`}
-                            onClick={() => setActive(label)}
-                        >
-                            {active === label && (
-                                <motion.span
-                                    className="nav-link-bg"
-                                    layoutId="active-pill"
-                                    transition={{ type: "spring", stiffness: 380, damping: 34 }}
-                                />
-                            )}
-                            <span className="link-icon">
-                                <Icon size={13} strokeWidth={2.2} />
-                            </span>
-                            <span>{label}</span>
-                        </a>
-                    ))}
-                </nav>
+      {/* ── Mobile Drawer ─────────────────────────────────────────────── */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            className="mobile-drawer"
+            initial={{ y: -24, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -24, opacity: 0 }}
+            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="mobile-nav-links">
+              <a
+                href="/"
+                className="mobile-nav-link"
+                onClick={() => setMobileOpen(false)}
+              >
+                <Home size={18} strokeWidth={2} />
+                Home
+              </a>
+              {NAV_LINKS.map(({ label, icon: Icon, href }, i) => (
+                <motion.a
+                  key={label}
+                  href={href}
+                  className={`mobile-nav-link${active === label ? " active" : ""}`}
+                  onClick={() => { setActive(label); setMobileOpen(false); }}
+                  initial={{ x: -16, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: i * 0.055, duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <Icon size={18} strokeWidth={2} />
+                  {label}
+                </motion.a>
+              ))}
 
-                {/* Right cluster */}
-                <div className="right-cluster">
-                    {/* Theme toggle */}
-                    <AnimatedThemeToggler
-                        className="theme-btn"
-                        aria-label="Toggle theme"
-                    />
-
-                    {/* Open to work */}
-                    <motion.a
-                        href="#contact"
-                        className="work-btn"
-                        whileHover={{ y: -2 }}
-                        whileTap={{ scale: 0.97 }}
-                    >
-                        <span className="dot" />
-                        Open to work
-                    </motion.a>
-
-                    {/* Mobile menu */}
-                    <button
-                        className="menu-btn"
-                        onClick={() => setMobileOpen((o) => !o)}
-                        aria-label="Toggle menu"
-                    >
-                        <AnimatePresence mode="wait" initial={false}>
-                            {mobileOpen ? (
-                                <motion.span
-                                    key="x"
-                                    initial={{ rotate: -45, opacity: 0 }}
-                                    animate={{ rotate: 0, opacity: 1 }}
-                                    exit={{ rotate: 45, opacity: 0 }}
-                                    transition={{ duration: 0.18 }}
-                                    style={{ display: "flex" }}
-                                >
-                                    <X size={18} strokeWidth={2} />
-                                </motion.span>
-                            ) : (
-                                <motion.span
-                                    key="menu"
-                                    initial={{ rotate: 45, opacity: 0 }}
-                                    animate={{ rotate: 0, opacity: 1 }}
-                                    exit={{ rotate: -45, opacity: 0 }}
-                                    transition={{ duration: 0.18 }}
-                                    style={{ display: "flex" }}
-                                >
-                                    <Menu size={18} strokeWidth={2} />
-                                </motion.span>
-                            )}
-                        </AnimatePresence>
-                    </button>
-                </div>
-            </motion.nav>
-
-            {/* ── Mobile Drawer ─────────────────────────────────────────────── */}
-            <AnimatePresence>
-                {mobileOpen && (
-                    <motion.div
-                        className="mobile-drawer"
-                        initial={{ y: -24, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        exit={{ y: -24, opacity: 0 }}
-                        transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                    >
-                        <div className="mobile-nav-links">
-                            <a
-                                href="/"
-                                className="mobile-nav-link"
-                                onClick={() => setMobileOpen(false)}
-                            >
-                                <Home size={18} strokeWidth={2} />
-                                Home
-                            </a>
-                            {NAV_LINKS.map(({ label, icon: Icon, href }, i) => (
-                                <motion.a
-                                    key={label}
-                                    href={href}
-                                    className={`mobile-nav-link${active === label ? " active" : ""}`}
-                                    onClick={() => { setActive(label); setMobileOpen(false); }}
-                                    initial={{ x: -16, opacity: 0 }}
-                                    animate={{ x: 0, opacity: 1 }}
-                                    transition={{ delay: i * 0.055, duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                                >
-                                    <Icon size={18} strokeWidth={2} />
-                                    {label}
-                                </motion.a>
-                            ))}
-
-                            <motion.a
-                                href="#contact"
-                                className="mobile-work-btn"
-                                onClick={() => setMobileOpen(false)}
-                                initial={{ opacity: 0, y: 8 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.22, duration: 0.28 }}
-                            >
-                                <span className="dot" />
-                                Open to work
-                            </motion.a>
-                        </div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </>
-    );
+              <motion.a
+                href="#contact"
+                className="mobile-work-btn"
+                onClick={() => setMobileOpen(false)}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.22, duration: 0.28 }}
+              >
+                <span className="dot" />
+                Open to work
+              </motion.a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
 }

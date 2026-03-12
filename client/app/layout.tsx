@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { TimeBasedThemeManager } from "./components/TimeBasedThemeManager";
+import { ThemeProvider } from "./context/ThemeContext";
+import LenisProvider from "./components/LenisProvider";
+import { AIChatButton } from "../components/ui/ai-chat-button";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -83,8 +85,27 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <TimeBasedThemeManager />
-        {children}
+        <LenisProvider>
+          <ThemeProvider>
+            {children}
+            <AIChatButton />
+          </ThemeProvider>
+        </LenisProvider>
+        {typeof window !== 'undefined' && (
+          <script 
+            suppressHydrationWarning
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function() {
+                  const saved = localStorage.getItem('theme-preference');
+                  if (saved === 'dark' || (saved !== 'light' && (new Date().getHours() >= 19 || new Date().getHours() < 7))) {
+                    document.documentElement.classList.add('dark');
+                  }
+                })();
+              `,
+            }}
+          />
+        )}
       </body>
     </html>
   );
