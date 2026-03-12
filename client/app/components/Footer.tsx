@@ -6,30 +6,14 @@ import {
     useInView,
     AnimatePresence,
 } from "framer-motion";
-import Lenis from "@studio-freight/lenis";
 import {
     Github,
     Linkedin,
-    Send,
+    Mail,
     ArrowUp,
     Heart,
     Coffee,
 } from "lucide-react";
-
-// ─── Lenis ───────────────────────────────────────────────────────────────────
-function useLenis() {
-    useEffect(() => {
-        const lenis = new Lenis({
-            duration: 1.25,
-            easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            smooth: true,
-        } as any);
-        let id: number;
-        const raf = (time: number) => { lenis.raf(time); id = requestAnimationFrame(raf); };
-        id = requestAnimationFrame(raf);
-        return () => { cancelAnimationFrame(id); lenis.destroy(); };
-    }, []);
-}
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const QUICK_LINKS = [
@@ -41,16 +25,15 @@ const QUICK_LINKS = [
 ];
 
 const SOCIALS = [
-    { icon: Github, href: "https://github.com", label: "GitHub", color: "#f0efea" },
-    { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn", color: "#0077b5" },
-    { icon: Send, href: "https://t.me", label: "Telegram", color: "#0088cc" },
+    { icon: Github, href: "https://github.com/Sayam09das", label: "GitHub", color: "#f0efea" },
+    { icon: Linkedin, href: "https://www.linkedin.com/in/sayam-das-43a703287/", label: "LinkedIn", color: "#0077b5" },
+    { icon: Mail, href: "mailto:hello@sayamd.as", label: "Email", color: "#7c6fcd" },
 ];
 
 const CURRENT_YEAR = new Date().getFullYear();
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 export default function Footer() {
-    useLenis();
     const footerRef = useRef<HTMLElement>(null);
     const headingInView = useInView(footerRef, { once: true, margin: "-60px" });
 
@@ -92,7 +75,7 @@ export default function Footer() {
 
         html, body {
           background: ${bg};
-          font-family: 'DM Sans', sans-serif;
+          font-family: 'Funnel Display', sans-serif;
           min-height: 100vh;
           transition: background 0.35s;
         }
@@ -200,7 +183,7 @@ export default function Footer() {
                         >
                             <h3
                                 style={{
-                                    fontFamily: "'Syne', sans-serif",
+                                    fontFamily: "'Bricolage Grotesque', sans-serif",
                                     fontWeight: 900,
                                     fontSize: "clamp(1.5rem, 3vw, 2rem)",
                                     letterSpacing: "-0.02em",
@@ -269,7 +252,7 @@ export default function Footer() {
                         >
                             <h4
                                 style={{
-                                    fontFamily: "'Syne', sans-serif",
+                                    fontFamily: "'Bricolage Grotesque', sans-serif",
                                     fontWeight: 700,
                                     fontSize: "0.85rem",
                                     letterSpacing: "0.08em",
@@ -313,7 +296,7 @@ export default function Footer() {
                         >
                             <h4
                                 style={{
-                                    fontFamily: "'Syne', sans-serif",
+                                    fontFamily: "'Bricolage Grotesque', sans-serif",
                                     fontWeight: 700,
                                     fontSize: "0.85rem",
                                     letterSpacing: "0.08em",
@@ -327,14 +310,14 @@ export default function Footer() {
                             </h4>
                             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                                 <a
-                                    href="mailto:hello@example.com"
+href="mailto:hello@sayamd.as"
                                     style={{
                                         fontSize: "0.9rem",
                                         color: muted,
                                         textDecoration: "none",
                                     }}
                                 >
-                                    hello@example.com
+hello@sayamd.as
                                 </a>
                                 <a
                                     href="tel:+1234567890"

@@ -8,7 +8,6 @@ import {
     useTransform,
     AnimatePresence,
 } from "framer-motion";
-import Lenis from "@studio-freight/lenis";
 import {
     GraduationCap,
     BookOpen,
@@ -17,21 +16,6 @@ import {
     Star,
     ExternalLink,
 } from "lucide-react";
-
-// ─── Lenis ───────────────────────────────────────────────────────────────────
-function useLenis() {
-    useEffect(() => {
-        const lenis = new Lenis({
-            duration: 1.25,
-            easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            smooth: true,
-        } as any);
-        let id: number;
-        const raf = (time: number) => { lenis.raf(time); id = requestAnimationFrame(raf); };
-        id = requestAnimationFrame(raf);
-        return () => { cancelAnimationFrame(id); lenis.destroy(); };
-    }, []);
-}
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 interface EducationItem {
@@ -53,80 +37,73 @@ interface EducationItem {
 const EDUCATION: EducationItem[] = [
     {
         id: 1,
-        period: "2020 — 2024",
-        degree: "Bachelor of Science",
-        field: "Computer Science",
-        institution: "University of Tehran",
-        location: "Tehran, Iran",
-        gpa: "3.8 / 4.0",
+        period: "2023 — Present",
+        degree: "Bachelor of Computer Applications",
+        field: "Computer Applications",
+        institution: "Adamas University",
+        location: "West Bengal, India",
         description:
-            "Focused on software engineering, algorithms, and distributed systems. Thesis on optimizing microservice communication using gRPC and Protocol Buffers.",
+            "Currently pursuing BCA with focus on programming, data structures, web development, and software engineering fundamentals.",
         highlights: [
-            "Dean's List — 3 consecutive years",
-            "Thesis: Microservice Communication Optimization",
-            "Teaching Assistant — Data Structures & Algorithms",
-            "Led university back-end development club",
+            "Focused on Full-Stack Web Development",
+            "Working with React, Next.js, Node.js",
+            "Exploring Python and Machine Learning",
+            "Building modern development projects",
         ],
         accent: "#7c6fcd",
         icon: GraduationCap,
         type: "degree",
-        link: "#",
     },
     {
         id: 2,
-        period: "2022",
-        degree: "Professional Certificate",
-        field: "Cloud Architecture on AWS",
-        institution: "Amazon Web Services",
+        period: "2025 — 2025",
+        degree: "Online Course",
+        field: "Data Structures & Algorithms",
+        institution: "Algo University",
         location: "Online",
         description:
-            "Comprehensive training on designing fault-tolerant, scalable cloud architectures. Covered VPC, EC2, RDS, Lambda, and infrastructure as code with CloudFormation.",
+            "Studying core data structures and algorithms including problem solving, complexity analysis, and algorithmic thinking.",
         highlights: [
-            "AWS Solutions Architect — Associate",
-            "Hands-on labs: ECS, EKS, CloudFormation",
-            "Scored 94% on final assessment",
-            "Completed 120+ hours of coursework",
+            "Arrays, Linked Lists, Trees, Graphs",
+            "Sorting and searching algorithms",
+            "Time and space complexity analysis",
+            "Problem solving and coding practice",
         ],
         accent: "#f5a623",
         icon: Award,
-        type: "cert",
-        link: "#",
+        type: "course",
     },
     {
         id: 3,
-        period: "2021",
-        degree: "Advanced Course",
-        field: "Database Systems & Optimization",
-        institution: "Coursera — Stanford Online",
-        location: "Online",
+        period: "2020 — 2022",
+        degree: "Higher Secondary Education",
+        field: "Science Stream",
+        institution: "Kuikota Shankari Vidyaniketan U. Pry",
+        location: "West Bengal, India",
         description:
-            "Deep dive into relational database internals, query optimization, indexing strategies, and transaction management. Applied concepts in PostgreSQL and MySQL.",
+            "Completed higher secondary education with focus on mathematics and science subjects, building analytical and logical thinking.",
         highlights: [
-            "Query planner internals & EXPLAIN ANALYZE",
-            "B-Tree, Hash, GIN & GiST index structures",
-            "MVCC, isolation levels & locking strategies",
-            "Top 5% of cohort — with distinction",
+            "Strong foundation in Mathematics",
+            "Science and analytical studies",
+            "Introduction to computer fundamentals",
         ],
         accent: "#4caf7d",
-        icon: FlaskConical,
-        type: "course",
-        link: "#",
+        icon: BookOpen,
+        type: "degree",
     },
     {
         id: 4,
-        period: "2019 — 2020",
-        degree: "Diploma",
-        field: "Mathematics & Physics",
-        institution: "Allameh Helli High School",
-        location: "Tehran, Iran",
-        gpa: "19.4 / 20",
+        period: "2018 — 2020",
+        degree: "Secondary Education",
+        field: "General Education",
+        institution: "Keshiary High School (H.S.)",
+        location: "West Bengal, India",
         description:
-            "National Organization for Development of Exceptional Talents (SAMPAD). Strong foundation in discrete mathematics, calculus, and algorithmic thinking.",
+            "Completed secondary education and developed early interest in technology and computers.",
         highlights: [
-            "National Mathematics Olympiad — Bronze Medal",
-            "Top of graduating class",
-            "Programming Club founder & president",
-            "Introduced to C++ and competitive programming",
+            "Academic foundation",
+            "Interest in technology and computing",
+            "Early exposure to programming",
         ],
         accent: "#e040fb",
         icon: BookOpen,
@@ -248,7 +225,7 @@ function EducationCard({
                             {/* Type badge */}
                             <span
                                 style={{
-                                    fontFamily: "'Syne', sans-serif",
+                                    fontFamily: "'Bricolage Grotesque', sans-serif",
                                     fontSize: "0.62rem",
                                     fontWeight: 800,
                                     letterSpacing: "0.1em",
@@ -263,7 +240,7 @@ function EducationCard({
                             {/* Period */}
                             <span
                                 style={{
-                                    fontFamily: "'DM Sans', sans-serif",
+                                    fontFamily: "'Funnel Display', sans-serif",
                                     fontSize: "0.75rem",
                                     color: muted,
                                     fontWeight: 500,
@@ -289,7 +266,7 @@ function EducationCard({
                                 <Star size={10} color={item.accent} strokeWidth={2.5} />
                                 <span
                                     style={{
-                                        fontFamily: "'Syne', sans-serif",
+                                        fontFamily: "'Bricolage Grotesque', sans-serif",
                                         fontSize: "0.68rem",
                                         fontWeight: 800,
                                         color: item.accent,
@@ -327,7 +304,7 @@ function EducationCard({
                 {/* Degree & field */}
                 <h3
                     style={{
-                        fontFamily: "'Syne', sans-serif",
+                        fontFamily: "'Bricolage Grotesque', sans-serif",
                         fontWeight: 800,
                         fontSize: "clamp(1rem, 1.9vw, 1.22rem)",
                         letterSpacing: "-0.022em",
@@ -480,7 +457,6 @@ function TimelineDot({
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 export default function Education() {
-    useLenis();
     const sectionRef = useRef<HTMLElement>(null);
     const headingRef = useRef<HTMLDivElement>(null);
     const headingInView = useInView(headingRef, { once: true, margin: "-60px" });
@@ -505,9 +481,9 @@ export default function Education() {
         const observer = new MutationObserver(() => {
             setDark(document.documentElement.classList.contains("dark"));
         });
-        observer.observe(document.documentElement, { 
-            attributes: true, 
-            attributeFilter: ['class'] 
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
         });
         return () => observer.disconnect();
     }, []);
@@ -526,7 +502,7 @@ export default function Education() {
 
         html, body {
           background: ${bg};
-          font-family: 'DM Sans', sans-serif;
+          font-family: 'Funnel Display', sans-serif;
           min-height: 100vh;
           transition: background 0.35s;
         }
@@ -638,7 +614,7 @@ export default function Education() {
                         <div style={{ flex: 1, height: 1, background: border }} />
                         <h2
                             style={{
-                                fontFamily: "'Syne', sans-serif",
+                                fontFamily: "'Bricolage Grotesque', sans-serif",
                                 fontWeight: 900,
                                 fontSize: "clamp(2.2rem, 5.5vw, 4.2rem)",
                                 letterSpacing: "-0.038em",

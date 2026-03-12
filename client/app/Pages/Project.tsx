@@ -9,23 +9,7 @@ import {
     useSpring,
     AnimatePresence,
 } from "framer-motion";
-import Lenis from "@studio-freight/lenis";
 import { ArrowUpRight } from "lucide-react";
-
-// ─── Lenis Hook ───────────────────────────────────────────────────────────────
-function useLenis() {
-    useEffect(() => {
-        const lenis = new Lenis({
-            duration: 1.25,
-            easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            smooth: true,
-        } as any);
-        let id: number;
-        const raf = (time: number) => { lenis.raf(time); id = requestAnimationFrame(raf); };
-        id = requestAnimationFrame(raf);
-        return () => { cancelAnimationFrame(id); lenis.destroy(); };
-    }, []);
-}
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface Project {
@@ -39,67 +23,66 @@ interface Project {
     tech: string[];
 }
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
 const PROJECTS: Project[] = [
     {
         id: 1,
-        title: "Prism Editorial",
-        category: "UI Design",
-        image: "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=800&q=85",
-        accent: "#ff6b35",
+        title: "Task Manager App",
+        category: "Web Application",
+        image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=900&q=85",
+        accent: "#7c6fcd",
         span: "tall",
-        year: "2024",
-        tech: ["Figma", "React"],
+        year: "2025",
+        tech: ["React", "Node.js", "MongoDB"],
     },
     {
         id: 2,
-        title: "Heilsa Health App",
-        category: "Web & Mobile",
-        image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=900&q=85",
+        title: "Disease Prediction Model",
+        category: "Machine Learning",
+        image: "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=900&q=85",
         accent: "#4caf7d",
         span: "normal",
-        year: "2024",
-        tech: ["Node.js", "React Native"],
+        year: "2025",
+        tech: ["Python", "Machine Learning", "Scikit-Learn"],
     },
     {
         id: 3,
-        title: "Dorik Builder",
-        category: "SaaS Platform",
-        image: "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=900&q=85",
-        accent: "#7c6fcd",
+        title: "MDAI Learning Platform",
+        category: "AI Education Tool",
+        image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=900&q=85",
+        accent: "#ff6b35",
         span: "normal",
-        year: "2023",
-        tech: [".NET", "PostgreSQL"],
+        year: "2026",
+        tech: ["Python", "Jupyter", "Machine Learning"],
     },
     {
         id: 4,
-        title: "Metrade Finance",
-        category: "Dashboard",
-        image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=900&q=85",
+        title: "Portfolio Website",
+        category: "Developer Portfolio",
+        image: "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?w=900&q=85",
         accent: "#5b9fd4",
         span: "wide",
-        year: "2023",
-        tech: ["GraphQL", "Redis"],
+        year: "2026",
+        tech: ["Next.js", "React", "Framer Motion"],
     },
     {
         id: 5,
-        title: "NeonShop Commerce",
-        category: "E-commerce",
-        image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900&q=85",
+        title: "Finance Tracker",
+        category: "Web Application",
+        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=900&q=85",
         accent: "#e040fb",
         span: "normal",
-        year: "2024",
-        tech: ["Docker", "AWS"],
+        year: "2026",
+        tech: ["React", "JavaScript", "Chart.js", "Local Storage"],
     },
     {
         id: 6,
-        title: "Hook Agency",
-        category: "Corporate Site",
-        image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=900&q=85",
+        title: "Data Analysis Dashboard",
+        category: "Data Visualization",
+        image: "https://images.unsplash.com/photo-1543286386-713bdd548da4?w=900&q=85",
         accent: "#f5a623",
         span: "normal",
-        year: "2023",
-        tech: ["API", "Terraform"],
+        year: "2024",
+        tech: ["Python", "Pandas", "Matplotlib"],
     },
 ];
 
@@ -228,7 +211,7 @@ function ProjectCard({
             >
                 <span
                     style={{
-                        fontFamily: "'Syne', sans-serif",
+                        fontFamily: "'Bricolage Grotesque', sans-serif",
                         fontSize: "0.7rem",
                         fontWeight: 700,
                         color: "rgba(255,255,255,0.7)",
@@ -289,7 +272,7 @@ function ProjectCard({
                         <span
                             key={t}
                             style={{
-                                fontFamily: "'Syne', sans-serif",
+                                fontFamily: "'Bricolage Grotesque', sans-serif",
                                 fontSize: "0.65rem",
                                 fontWeight: 700,
                                 letterSpacing: "0.06em",
@@ -308,7 +291,7 @@ function ProjectCard({
 
                 <p
                     style={{
-                        fontFamily: "'Syne', sans-serif",
+                        fontFamily: "'Bricolage Grotesque', sans-serif",
                         fontSize: "0.72rem",
                         fontWeight: 600,
                         color: project.accent,
@@ -322,7 +305,7 @@ function ProjectCard({
 
                 <h3
                     style={{
-                        fontFamily: "'Syne', sans-serif",
+                        fontFamily: "'Bricolage Grotesque', sans-serif",
                         fontWeight: 800,
                         fontSize: "clamp(1rem, 2vw, 1.3rem)",
                         letterSpacing: "-0.022em",
@@ -376,7 +359,7 @@ function SectionHeading({ dark }: { dark: boolean }) {
             <div style={{ flex: 1, height: 1, background: border }} />
             <h2
                 style={{
-                    fontFamily: "'Syne', sans-serif",
+                    fontFamily: "'Bricolage Grotesque', sans-serif",
                     fontWeight: 900,
                     fontSize: "clamp(2.2rem, 5.5vw, 4.2rem)",
                     letterSpacing: "-0.038em",
@@ -396,7 +379,6 @@ function SectionHeading({ dark }: { dark: boolean }) {
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 export default function Projects() {
-    useLenis();
 
     // Read dark mode from document class (set by Navbar)
     const [dark, setDark] = useState(() => {
@@ -411,9 +393,9 @@ export default function Projects() {
         const observer = new MutationObserver(() => {
             setDark(document.documentElement.classList.contains("dark"));
         });
-        observer.observe(document.documentElement, { 
-            attributes: true, 
-            attributeFilter: ['class'] 
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
         });
         return () => observer.disconnect();
     }, []);
@@ -427,7 +409,7 @@ export default function Projects() {
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html, body {
           background: ${bg};
-          font-family: 'DM Sans', sans-serif;
+          font-family: 'Funnel Display', sans-serif;
           min-height: 100vh;
           transition: background 0.35s;
         }

@@ -2,52 +2,34 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Lenis from "@studio-freight/lenis";
 import {
     Home,
+    User2,
     Briefcase,
     FolderOpen,
-    Mail,
     Star,
+    Mail,
     Menu,
     X,
 } from "lucide-react";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 
-// ─── Lenis smooth scroll hook ────────────────────────────────────────────────
-function useLenis() {
-    useEffect(() => {
-        const lenis = new Lenis({
-            duration: 1.2,
-            easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            smooth: true,
-        } as any);
-
-        function raf(time: number) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
-        requestAnimationFrame(raf);
-
-        return () => lenis.destroy();
-    }, []);
-}
-
 // ─── Nav links data ───────────────────────────────────────────────────────────
 const NAV_LINKS = [
+{ label: "About", icon: User2, href: "/#about" },
     { label: "Services", icon: Briefcase, href: "/#services" },
     { label: "Projects", icon: FolderOpen, href: "/#projects" },
-    { label: "Skiils", icon: Mail, href: "/#skills" },
-    { label: "Contact", icon: Star, href: "/#contact" },
+    { label: "Skills", icon: Star, href: "/#skills" },
+    { label: "Contact", icon: Mail, href: "/#contact" },
 ];
 
 // ─── Navbar component ─────────────────────────────────────────────────────────
 export default function Navbar() {
-    useLenis();
 
     const [scrolled, setScrolled] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
-    const [active, setActive] = useState("Services");
+    const [isDark, setIsDark] = useState(false);
+    const [active, setActive] = useState("Home");
 
     // Scroll listener for glass blur effect
     useEffect(() => {
@@ -55,6 +37,31 @@ export default function Navbar() {
         window.addEventListener("scroll", onScroll, { passive: true });
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
+
+    // Auto dark mode based on time
+    useEffect(() => {
+        const hour = new Date().getHours();
+        const shouldBeDark = hour >= 18 || hour < 6;
+        if (shouldBeDark !== isDark) {
+            document.documentElement.classList.toggle('dark', shouldBeDark);
+            localStorage.setItem("theme", shouldBeDark ? "dark" : "light");
+            setIsDark(shouldBeDark);
+        }
+
+        const listener = () => {
+            const hour = new Date().getHours();
+            const newDark = hour >= 18 || hour < 6;
+            if (newDark !== isDark) {
+                document.documentElement.classList.toggle('dark', newDark);
+                localStorage.setItem("theme", newDark ? "dark" : "light");
+                setIsDark(newDark);
+            }
+        };
+
+        const interval = setInterval(listener, 60000); // Check every minute
+
+        return () => clearInterval(interval);
+    }, []); // No deps, run once
 
     // Close mobile menu on resize
     useEffect(() => {
@@ -90,7 +97,7 @@ export default function Navbar() {
           --radius: 9999px;
           --shadow: 0 4px 24px rgba(0,0,0,0.08);
           --shadow-lg: 0 8px 40px rgba(0,0,0,0.12);
-          font-family: 'DM Sans', sans-serif;
+          font-family: 'Funnel Display', sans-serif;
         }
 
         .dark {
@@ -169,7 +176,7 @@ export default function Navbar() {
         }
 
         .avatar-fallback {
-          font-family: 'Syne', sans-serif;
+          font-family: 'Bricolage Grotesque', sans-serif;
           font-weight: 700;
           font-size: 13px;
           color: var(--text);
@@ -183,7 +190,7 @@ export default function Navbar() {
         }
 
         .brand-name {
-          font-family: 'Syne', sans-serif;
+          font-family: 'Bricolage Grotesque', sans-serif;
           font-size: 13.5px;
           font-weight: 600;
           color: var(--text);
@@ -228,7 +235,7 @@ export default function Navbar() {
           gap: 6px;
           padding: 7px 14px;
           border-radius: var(--radius);
-          font-family: 'DM Sans', sans-serif;
+          font-family: 'Funnel Display', sans-serif;
           font-size: 13.5px;
           font-weight: 500;
           color: var(--text-muted);
@@ -277,7 +284,7 @@ export default function Navbar() {
           border-radius: var(--radius);
           background: var(--btn-bg);
           color: var(--btn-text);
-          font-family: 'Syne', sans-serif;
+          font-family: 'Bricolage Grotesque', sans-serif;
           font-size: 13.5px;
           font-weight: 600;
           letter-spacing: -0.01em;
@@ -371,7 +378,7 @@ export default function Navbar() {
           gap: 12px;
           padding: 13px 16px;
           border-radius: 14px;
-          font-family: 'Syne', sans-serif;
+          font-family: 'Bricolage Grotesque', sans-serif;
           font-size: 16px;
           font-weight: 600;
           color: var(--text-muted);
@@ -402,7 +409,7 @@ export default function Navbar() {
           border-radius: var(--radius);
           background: var(--btn-bg);
           color: var(--btn-text);
-          font-family: 'Syne', sans-serif;
+          font-family: 'Bricolage Grotesque', sans-serif;
           font-size: 15px;
           font-weight: 700;
           cursor: pointer;
@@ -450,19 +457,33 @@ export default function Navbar() {
                 {/* Brand */}
                 <a className="brand" href="/">
                     <div className="avatar">
-                        <span className="avatar-fallback">AM</span>
+                        <span className="avatar-fallback">SD</span>
                     </div>
                     <div className="brand-divider" />
                     <span className="brand-name">
-                        Amirreza<br />Mousavi
+                        Sayam Das
                     </span>
                 </a>
 
                 {/* Center pill */}
                 <nav className="nav-pill" aria-label="Main navigation">
-                    <button className="home-btn" aria-label="Home">
-                        <Home size={16} strokeWidth={2} />
-                    </button>
+<a
+                            href="/"
+                            className={`nav-link${active === "Home" ? " active" : ""}`}
+                            onClick={() => setActive("Home")}
+                        >
+                            {active === "Home" && (
+                                <motion.span
+                                    className="nav-link-bg"
+                                    layoutId="active-pill"
+                                    transition={{ type: "spring", stiffness: 380, damping: 34 }}
+                                />
+                            )}
+                            <span className="link-icon">
+                                <Home size={13} strokeWidth={2.2} />
+                            </span>
+                            <span>Home</span>
+                        </a>
 
                     {NAV_LINKS.map(({ label, icon: Icon, href }) => (
                         <a

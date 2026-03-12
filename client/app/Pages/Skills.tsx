@@ -8,23 +8,7 @@ import {
     useMotionValue,
     AnimatePresence,
 } from "framer-motion";
-import Lenis from "@studio-freight/lenis";
 import SkillsHero from "./SkillsHero";
-
-// ─── Lenis ───────────────────────────────────────────────────────────────────
-function useLenis() {
-    useEffect(() => {
-        const lenis = new Lenis({
-            duration: 1.3,
-            easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            smooth: true,
-        } as any);
-        let id: number;
-        const raf = (time: number) => { lenis.raf(time); id = requestAnimationFrame(raf); };
-        id = requestAnimationFrame(raf);
-        return () => { cancelAnimationFrame(id); lenis.destroy(); };
-    }, []);
-}
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 interface Skill {
@@ -34,36 +18,200 @@ interface Skill {
     category: string;
     years: number;
     desc: string;
+    icon: string;
 }
 
-const CATEGORIES = ["All", "Backend", "Database", "DevOps", "Tools"];
+const CATEGORIES = ["All", "Frontend", "Backend", "Database", "Tools"];
 
 const SKILLS: Skill[] = [
-    // Backend
-    { name: "Node.js", level: 94, color: "#73b55a", category: "Backend", years: 4, desc: "REST APIs, microservices, event-driven arch" },
-    { name: "C# / .NET", level: 86, color: "#9b4fc4", category: "Backend", years: 3, desc: "Enterprise apps, ASP.NET Core, gRPC services" },
-    { name: "GraphQL", level: 80, color: "#e535ab", category: "Backend", years: 2, desc: "Schema design, resolvers, subscriptions" },
-    { name: "Python", level: 74, color: "#f5c518", category: "Backend", years: 2, desc: "Scripting, data pipelines, FastAPI" },
-    // Database
-    { name: "PostgreSQL", level: 90, color: "#336791", category: "Database", years: 4, desc: "Schema design, indexing, query optimization" },
-    { name: "MongoDB", level: 82, color: "#47a248", category: "Database", years: 3, desc: "Document modeling, aggregation pipelines" },
-    { name: "Redis", level: 84, color: "#d82c20", category: "Database", years: 3, desc: "Caching, pub/sub, session management" },
-    { name: "MySQL", level: 76, color: "#4479a1", category: "Database", years: 3, desc: "Relational design, stored procedures" },
-    // DevOps
-    { name: "Docker", level: 88, color: "#2496ed", category: "DevOps", years: 3, desc: "Containerization, multi-stage builds, Compose" },
-    { name: "Kubernetes", level: 74, color: "#326ce5", category: "DevOps", years: 2, desc: "Orchestration, Helm charts, ingress controllers" },
-    { name: "AWS", level: 80, color: "#f5a623", category: "DevOps", years: 3, desc: "EC2, RDS, Lambda, S3, CloudFormation" },
-    { name: "CI/CD", level: 85, color: "#e040fb", category: "DevOps", years: 3, desc: "GitHub Actions, Jenkins, automated pipelines" },
-    // Tools
-    { name: "Git", level: 96, color: "#f05032", category: "Tools", years: 5, desc: "Branching strategies, code review workflows" },
-    { name: "Kafka", level: 72, color: "#000000", category: "Tools", years: 2, desc: "Event streaming, consumer groups, topics" },
-    { name: "Nginx", level: 78, color: "#009639", category: "Tools", years: 3, desc: "Reverse proxy, load balancing, SSL termination" },
-    { name: "Terraform", level: 70, color: "#7b42bc", category: "Tools", years: 2, desc: "Infrastructure as code, state management" },
-];
+  // Core Web
+  {
+    name: "HTML5",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg",
+    level: 90,
+    color: "#E34F26",
+    category: "Frontend",
+    years: 4,
+    desc: "Semantic markup and modern web structure",
+  },
+  {
+    name: "CSS3",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg",
+    level: 88,
+    color: "#1572B6",
+    category: "Frontend",
+    years: 4,
+    desc: "Responsive layouts, flexbox, grid, animations",
+  },
+  {
+    name: "JavaScript",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
+    level: 85,
+    color: "#F7DF1E",
+    category: "Frontend",
+    years: 4,
+    desc: "ES6+, asynchronous programming",
+  },
+  {
+    name: "TypeScript",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
+    level: 75,
+    color: "#3178C6",
+    category: "Frontend",
+    years: 2,
+    desc: "Typed JavaScript for scalable apps",
+  },
 
+  // Frameworks
+  {
+    name: "React",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
+    level: 85,
+    color: "#61DAFB",
+    category: "Framework",
+    years: 3,
+    desc: "Component architecture and hooks",
+  },
+  {
+    name: "Next.js",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg",
+    level: 80,
+    color: "#000000",
+    category: "Framework",
+    years: 2,
+    desc: "SSR, routing and modern React apps",
+  },
+  {
+    name: "Bootstrap",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg",
+    level: 80,
+    color: "#7952B3",
+    category: "Framework",
+    years: 3,
+    desc: "Responsive UI framework",
+  },
+  {
+    name: "Vite",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vitejs/vitejs-original.svg",
+    level: 75,
+    color: "#646CFF",
+    category: "Tools",
+    years: 2,
+    desc: "Fast frontend build tool",
+  },
+
+  // Animation
+  {
+    name: "Framer Motion",
+    icon: "https://cdn.simpleicons.org/framer/0055FF",
+    level: 80,
+    color: "#0055FF",
+    category: "Animation",
+    years: 2,
+    desc: "React animation library",
+  },
+  {
+    name: "GSAP",
+    icon: "https://cdn.simpleicons.org/greensock/88CE02",
+    level: 75,
+    color: "#88CE02",
+    category: "Animation",
+    years: 1,
+    desc: "High performance animations",
+  },
+  {
+    name: "Lenis",
+    icon: "https://cdn.simpleicons.org/javascript/F7DF1E",
+    level: 70,
+    color: "#F7DF1E",
+    category: "Animation",
+    years: 1,
+    desc: "Smooth scrolling animations",
+  },
+
+  // Backend
+  {
+    name: "Node.js",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg",
+    level: 75,
+    color: "#339933",
+    category: "Backend",
+    years: 3,
+    desc: "Backend APIs and server logic",
+  },
+  {
+    name: "Python",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
+    level: 78,
+    color: "#3776AB",
+    category: "Backend",
+    years: 3,
+    desc: "Automation and ML scripting",
+  },
+
+  // AI
+  {
+    name: "Machine Learning",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg",
+    level: 70,
+    color: "#FF6F00",
+    category: "AI / ML",
+    years: 2,
+    desc: "Model training and ML experiments",
+  },
+
+  // Database
+  {
+    name: "MySQL",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg",
+    level: 75,
+    color: "#4479A1",
+    category: "Database",
+    years: 2,
+    desc: "Relational database management",
+  },
+  {
+    name: "MongoDB",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg",
+    level: 72,
+    color: "#47A248",
+    category: "Database",
+    years: 2,
+    desc: "NoSQL database for modern apps",
+  },
+
+  // Tools
+  {
+    name: "Git",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg",
+    level: 85,
+    color: "#F05032",
+    category: "Tools",
+    years: 4,
+    desc: "Version control and collaboration",
+  },
+  {
+    name: "Docker",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg",
+    level: 65,
+    color: "#2496ED",
+    category: "Tools",
+    years: 2,
+    desc: "Containerization",
+  },
+  {
+    name: "Excel",
+    icon: "https://cdn.simpleicons.org/microsoftexcel/217346",
+    level: 70,
+    color: "#217346",
+    category: "Tools",
+    years: 3,
+    desc: "Data analysis and spreadsheets",
+  },
+];
 // ─── Magnetic cursor hook ─────────────────────────────────────────────────────
 function useMagnetic(strength = 0.35) {
-    const ref = useRef < HTMLDivElement > (null);
+    const ref = useRef<HTMLDivElement>(null);
     const x = useMotionValue(0);
     const y = useMotionValue(0);
     const springX = useSpring(x, { stiffness: 200, damping: 20 });
@@ -106,7 +254,7 @@ function CircularSkill({
     index: number;
     dark: boolean;
 }) {
-    const ref = useRef < HTMLDivElement > (null);
+    const ref = useRef<HTMLDivElement>(null);
     const inView = useInView(ref, { once: true, margin: "-40px" });
     const { ref: magRef, springX, springY } = useMagnetic(0.25);
     const [hovered, setHovered] = useState(false);
@@ -187,34 +335,33 @@ function CircularSkill({
                             style={{ filter: `drop-shadow(0 0 5px ${skill.color}88)` }}
                         />
                     </svg>
-                    {/* Center percent */}
+                    {/* Center icon */}
                     <div
                         style={{
                             position: "absolute", inset: 0,
                             display: "flex", alignItems: "center", justifyContent: "center",
                         }}
                     >
-                        <motion.span
-                            initial={{ opacity: 0 }}
-                            animate={inView ? { opacity: 1 } : {}}
-                            transition={{ delay: index * 0.06 + 0.5 }}
+                        <motion.img
+                            src={skill.icon}
+                            alt={skill.name}
+                            initial={{ opacity: 0, scale: 0.5 }}
+                            animate={inView ? { opacity: 1, scale: 1 } : {}}
+                            transition={{ delay: index * 0.06 + 0.3, duration: 0.4 }}
                             style={{
-                                fontFamily: "'Syne', sans-serif",
-                                fontWeight: 900,
-                                fontSize: "0.85rem",
-                                color: skill.color,
-                                letterSpacing: "-0.04em",
+                                width: 36,
+                                height: 36,
+                                objectFit: "contain",
+                                userSelect: "none",
                             }}
-                        >
-                            {skill.level}
-                        </motion.span>
+                        />
                     </div>
                 </div>
 
                 {/* Name */}
                 <span
                     style={{
-                        fontFamily: "'Syne', sans-serif",
+                        fontFamily: "'Bricolage Grotesque', sans-serif",
                         fontWeight: 700,
                         fontSize: "0.76rem",
                         letterSpacing: "-0.01em",
@@ -230,7 +377,7 @@ function CircularSkill({
                 {/* Years badge */}
                 <span
                     style={{
-                        fontFamily: "'Syne', sans-serif",
+                        fontFamily: "'Bricolage Grotesque', sans-serif",
                         fontWeight: 700,
                         fontSize: "0.62rem",
                         letterSpacing: "0.06em",
@@ -295,7 +442,7 @@ function CircularSkill({
 
 // ─── Horizontal bar skill ─────────────────────────────────────────────────────
 function BarSkill({ skill, index, dark }: { skill: Skill; index: number; dark: boolean }) {
-    const ref = useRef < HTMLDivElement > (null);
+    const ref = useRef<HTMLDivElement>(null);
     const inView = useInView(ref, { once: true, margin: "-30px" });
     const [hovered, setHovered] = useState(false);
 
@@ -311,21 +458,20 @@ function BarSkill({ skill, index, dark }: { skill: Skill; index: number; dark: b
         >
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6, alignItems: "center" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    {/* Color dot */}
-                    <motion.span
-                        animate={{ scale: hovered ? 1.4 : 1, boxShadow: hovered ? `0 0 8px ${skill.color}88` : "none" }}
-                        transition={{ duration: 0.2 }}
+                    {/* Skill icon */}
+                    <img
+                        src={skill.icon}
+                        alt={skill.name}
                         style={{
-                            width: 7, height: 7,
-                            borderRadius: "50%",
-                            background: skill.color,
-                            display: "inline-block",
+                            width: 20,
+                            height: 20,
+                            objectFit: "contain",
                             flexShrink: 0,
                         }}
                     />
                     <span
                         style={{
-                            fontFamily: "'Syne', sans-serif",
+                            fontFamily: "'Bricolage Grotesque', sans-serif",
                             fontWeight: 700,
                             fontSize: "0.82rem",
                             letterSpacing: "0.01em",
@@ -339,7 +485,7 @@ function BarSkill({ skill, index, dark }: { skill: Skill; index: number; dark: b
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     <span
                         style={{
-                            fontFamily: "'Syne', sans-serif",
+                            fontFamily: "'Bricolage Grotesque', sans-serif",
                             fontSize: "0.68rem",
                             fontWeight: 700,
                             color: dark ? "rgba(240,239,234,0.3)" : "rgba(0,0,0,0.3)",
@@ -350,7 +496,7 @@ function BarSkill({ skill, index, dark }: { skill: Skill; index: number; dark: b
                     <motion.span
                         animate={{ color: hovered ? skill.color : dark ? "rgba(240,239,234,0.55)" : "rgba(0,0,0,0.55)" }}
                         style={{
-                            fontFamily: "'Syne', sans-serif",
+                            fontFamily: "'Bricolage Grotesque', sans-serif",
                             fontSize: "0.75rem",
                             fontWeight: 800,
                             minWidth: 32,
@@ -450,7 +596,7 @@ function CategoryFilter({
                     }}
                     transition={{ duration: 0.22 }}
                     style={{
-                        fontFamily: "'Syne', sans-serif",
+                        fontFamily: "'Bricolage Grotesque', sans-serif",
                         fontWeight: 700,
                         fontSize: "0.75rem",
                         letterSpacing: "0.04em",
@@ -471,10 +617,9 @@ function CategoryFilter({
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 export default function Skills() {
-    useLenis();
     const [activeCategory, setActiveCategory] = useState("All");
-    const sectionRef = useRef < HTMLElement > (null);
-    const headingRef = useRef < HTMLDivElement > (null);
+    const sectionRef = useRef<HTMLElement>(null);
+    const headingRef = useRef<HTMLDivElement>(null);
     const headingInView = useInView(headingRef, { once: true, margin: "-60px" });
 
     // Read dark mode from document class (set by Navbar)
@@ -490,9 +635,9 @@ export default function Skills() {
         const observer = new MutationObserver(() => {
             setDark(document.documentElement.classList.contains("dark"));
         });
-        observer.observe(document.documentElement, { 
-            attributes: true, 
-            attributeFilter: ['class'] 
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
         });
         return () => observer.disconnect();
     }, []);
@@ -516,7 +661,7 @@ export default function Skills() {
 
         html, body {
           background: ${bg};
-          font-family: 'DM Sans', sans-serif;
+          font-family: 'Funnel Display', sans-serif;
           min-height: 100vh;
           transition: background 0.35s;
           overflow-x: hidden;
@@ -623,7 +768,7 @@ export default function Skills() {
                                     />
                                     <span
                                         style={{
-                                            fontFamily: "'Syne', sans-serif",
+                                            fontFamily: "'Bricolage Grotesque', sans-serif",
                                             fontSize: "0.68rem",
                                             fontWeight: 800,
                                             letterSpacing: "0.12em",
@@ -636,7 +781,7 @@ export default function Skills() {
                                 </div>
                                 <h2
                                     style={{
-                                        fontFamily: "'Syne', sans-serif",
+                                        fontFamily: "'Bricolage Grotesque', sans-serif",
                                         fontWeight: 900,
                                         fontSize: "clamp(1.3rem, 2.8vw, 1.85rem)",
                                         letterSpacing: "-0.03em",
@@ -693,7 +838,7 @@ export default function Skills() {
                             />
                             <span
                                 style={{
-                                    fontFamily: "'Syne', sans-serif",
+                                    fontFamily: "'Bricolage Grotesque', sans-serif",
                                     fontSize: "0.68rem",
                                     fontWeight: 800,
                                     letterSpacing: "0.12em",
@@ -706,7 +851,7 @@ export default function Skills() {
                         </div>
 
                         <div className="skills-two-col">
-                            {(["Backend", "Database", "DevOps", "Tools"] as const).map((cat, colIdx) => {
+                            {(["Frontend", "Backend", "Database", "Tools"] as const).map((cat, colIdx) => {
                                 const catSkills = SKILLS.filter((s) => s.category === cat);
                                 return (
                                     <motion.div
@@ -727,7 +872,7 @@ export default function Skills() {
                                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 22 }}>
                                             <span
                                                 style={{
-                                                    fontFamily: "'Syne', sans-serif",
+                                                    fontFamily: "'Bricolage Grotesque', sans-serif",
                                                     fontWeight: 800,
                                                     fontSize: "0.9rem",
                                                     letterSpacing: "-0.015em",
@@ -739,7 +884,7 @@ export default function Skills() {
                                             </span>
                                             <span
                                                 style={{
-                                                    fontFamily: "'Syne', sans-serif",
+                                                    fontFamily: "'Bricolage Grotesque', sans-serif",
                                                     fontSize: "0.65rem",
                                                     fontWeight: 800,
                                                     letterSpacing: "0.08em",
@@ -791,7 +936,7 @@ export default function Skills() {
                                 <span
                                     key={`${skill.name}-${i}`}
                                     style={{
-                                        fontFamily: "'Syne', sans-serif",
+                                        fontFamily: "'Bricolage Grotesque', sans-serif",
                                         fontWeight: 800,
                                         fontSize: "clamp(0.75rem, 1.2vw, 0.95rem)",
                                         letterSpacing: "0.06em",

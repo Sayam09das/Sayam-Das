@@ -9,7 +9,6 @@ import {
     useSpring,
     AnimatePresence,
 } from "framer-motion";
-import Lenis from "@studio-freight/lenis";
 import {
     Download,
     MapPin,
@@ -19,145 +18,24 @@ import {
     Zap,
     Github,
     Linkedin,
-    Send,
+    Mail,
 } from "lucide-react";
-
-// ─── Lenis ───────────────────────────────────────────────────────────────────
-function useLenis() {
-    useEffect(() => {
-        const lenis = new Lenis({
-            duration: 1.25,
-            easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            smooth: true,
-        } as any);
-        let id: number;
-        const raf = (time: number) => { lenis.raf(time); id = requestAnimationFrame(raf); };
-        id = requestAnimationFrame(raf);
-        return () => { cancelAnimationFrame(id); lenis.destroy(); };
-    }, []);
-}
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const STATS = [
-    { value: "4+", label: "Years Experience", icon: Coffee },
-    { value: "38", label: "Projects Shipped", icon: Layers },
-    { value: "12", label: "Technologies", icon: Code2 },
-    { value: "99%", label: "Client Satisfaction", icon: Zap },
+    { value: "3+", label: "Years Learning & Building", icon: Coffee },
+    { value: "10+", label: "Projects Built", icon: Layers },
+    { value: "8+", label: "Technologies Used", icon: Code2 },
+    { value: "100%", label: "Learning Dedication", icon: Zap },
 ];
 
-const SKILLS = [
-    { name: "Node.js", level: 94, color: "#73b55a" },
-    { name: "PostgreSQL", level: 88, color: "#336791" },
-    { name: "C# / .NET", level: 85, color: "#9b4fc4" },
-    { name: "Docker / K8s", level: 80, color: "#2496ed" },
-    { name: "GraphQL", level: 78, color: "#e535ab" },
-    { name: "Redis", level: 82, color: "#d82c20" },
-];
-
-const TIMELINE = [
-    {
-        year: "2024",
-        role: "Senior Back-End Engineer",
-        company: "TechVenture Co.",
-        desc: "Architected microservices handling 2M+ daily requests, reduced API latency by 60%.",
-        accent: "#7c6fcd",
-    },
-    {
-        year: "2022",
-        role: "Back-End Developer",
-        company: "Scaleway Systems",
-        desc: "Built RESTful and GraphQL APIs for fintech products, led DB optimization initiatives.",
-        accent: "#4caf7d",
-    },
-    {
-        year: "2020",
-        role: "Junior Developer",
-        company: "DevStudio Agency",
-        desc: "Developed CMS integrations, third-party API connections, and internal tooling.",
-        accent: "#f5a623",
-    },
-];
 
 const SOCIALS = [
-    { icon: Github, href: "https://github.com", label: "GitHub" },
-    { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
-    { icon: Send, href: "https://t.me", label: "Telegram" },
+    { icon: Github, href: "https://github.com/Sayam09das", label: "GitHub" },
+    { icon: Linkedin, href: "https://www.linkedin.com/in/sayam-das-43a703287/", label: "LinkedIn" },
+    { icon: Mail, href: "mailto:hello@sayamd.as", label: "Email" },
 ];
 
-// ─── Skill bar ────────────────────────────────────────────────────────────────
-function SkillBar({
-    skill,
-    index,
-    dark,
-}: {
-    skill: (typeof SKILLS)[0];
-    index: number;
-    dark: boolean;
-}) {
-    const ref = useRef<HTMLDivElement>(null);
-    const inView = useInView(ref, { once: true, margin: "-40px" });
-
-    return (
-        <div ref={ref} style={{ marginBottom: 16 }}>
-            <div
-                style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    marginBottom: 7,
-                    alignItems: "baseline",
-                }}
-            >
-                <span
-                    style={{
-                        fontFamily: "'Syne', sans-serif",
-                        fontSize: "0.82rem",
-                        fontWeight: 700,
-                        color: dark ? "rgba(240,239,234,0.8)" : "rgba(0,0,0,0.72)",
-                        letterSpacing: "0.01em",
-                    }}
-                >
-                    {skill.name}
-                </span>
-                <span
-                    style={{
-                        fontFamily: "'Syne', sans-serif",
-                        fontSize: "0.72rem",
-                        fontWeight: 700,
-                        color: skill.color,
-                    }}
-                >
-                    {skill.level}%
-                </span>
-            </div>
-
-            {/* Track */}
-            <div
-                style={{
-                    height: 5,
-                    borderRadius: 9999,
-                    background: dark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.08)",
-                    overflow: "hidden",
-                }}
-            >
-                <motion.div
-                    initial={{ width: 0 }}
-                    animate={inView ? { width: `${skill.level}%` } : {}}
-                    transition={{
-                        delay: 0.15 + index * 0.07,
-                        duration: 0.9,
-                        ease: [0.22, 1, 0.36, 1],
-                    }}
-                    style={{
-                        height: "100%",
-                        borderRadius: 9999,
-                        background: `linear-gradient(90deg, ${skill.color}cc, ${skill.color})`,
-                        boxShadow: `0 0 12px ${skill.color}66`,
-                    }}
-                />
-            </div>
-        </div>
-    );
-}
 
 // ─── Stat card ────────────────────────────────────────────────────────────────
 function StatCard({
@@ -211,7 +89,7 @@ function StatCard({
             </div>
             <div
                 style={{
-                    fontFamily: "'Syne', sans-serif",
+                    fontFamily: "'Bricolage Grotesque', sans-serif",
                     fontWeight: 900,
                     fontSize: "clamp(1.5rem, 3vw, 2rem)",
                     letterSpacing: "-0.04em",
@@ -224,6 +102,7 @@ function StatCard({
             </div>
             <div
                 style={{
+                    fontFamily: "'Funnel Display', sans-serif",
                     fontSize: "0.75rem",
                     fontWeight: 500,
                     color: dark ? "rgba(240,239,234,0.42)" : "rgba(0,0,0,0.42)",
@@ -236,118 +115,7 @@ function StatCard({
     );
 }
 
-// ─── Timeline item ────────────────────────────────────────────────────────────
-function TimelineItem({
-    item,
-    index,
-    dark,
-    isLast,
-}: {
-    item: (typeof TIMELINE)[0];
-    index: number;
-    dark: boolean;
-    isLast: boolean;
-}) {
-    const ref = useRef<HTMLDivElement>(null);
-    const inView = useInView(ref, { once: true, margin: "-40px" });
 
-    return (
-        <motion.div
-            ref={ref}
-            initial={{ opacity: 0, x: -24 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{
-                delay: index * 0.12,
-                duration: 0.6,
-                ease: [0.22, 1, 0.36, 1],
-            }}
-            style={{
-                display: "flex",
-                gap: 18,
-                paddingBottom: isLast ? 0 : 28,
-                position: "relative",
-            }}
-        >
-            {/* Line + dot */}
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0 }}>
-                <motion.div
-                    initial={{ scale: 0 }}
-                    animate={inView ? { scale: 1 } : {}}
-                    transition={{ delay: index * 0.12 + 0.1, duration: 0.4, type: "spring", stiffness: 300 }}
-                    style={{
-                        width: 12, height: 12,
-                        borderRadius: "50%",
-                        background: item.accent,
-                        boxShadow: `0 0 10px ${item.accent}88`,
-                        flexShrink: 0,
-                        marginTop: 4,
-                    }}
-                />
-                {!isLast && (
-                    <motion.div
-                        initial={{ scaleY: 0, originY: 0 }}
-                        animate={inView ? { scaleY: 1 } : {}}
-                        transition={{ delay: index * 0.12 + 0.2, duration: 0.5 }}
-                        style={{
-                            flex: 1,
-                            width: 1,
-                            background: dark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.1)",
-                            marginTop: 6,
-                        }}
-                    />
-                )}
-            </div>
-
-            {/* Content */}
-            <div style={{ flex: 1, paddingBottom: 4 }}>
-                <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap", marginBottom: 3 }}>
-                    <span
-                        style={{
-                            fontFamily: "'Syne', sans-serif",
-                            fontSize: "0.7rem",
-                            fontWeight: 700,
-                            letterSpacing: "0.08em",
-                            color: item.accent,
-                            textTransform: "uppercase",
-                        }}
-                    >
-                        {item.year}
-                    </span>
-                    <span
-                        style={{
-                            fontSize: "0.7rem",
-                            color: dark ? "rgba(240,239,234,0.3)" : "rgba(0,0,0,0.3)",
-                        }}
-                    >
-                        {item.company}
-                    </span>
-                </div>
-                <h4
-                    style={{
-                        fontFamily: "'Syne', sans-serif",
-                        fontWeight: 700,
-                        fontSize: "0.92rem",
-                        letterSpacing: "-0.015em",
-                        color: dark ? "#f0efea" : "#111110",
-                        marginBottom: 5,
-                        transition: "color 0.35s",
-                    }}
-                >
-                    {item.role}
-                </h4>
-                <p
-                    style={{
-                        fontSize: "0.8rem",
-                        color: dark ? "rgba(240,239,234,0.44)" : "rgba(0,0,0,0.48)",
-                        lineHeight: 1.65,
-                    }}
-                >
-                    {item.desc}
-                </p>
-            </div>
-        </motion.div>
-    );
-}
 
 // ─── Parallax image ───────────────────────────────────────────────────────────
 function ParallaxPhoto({ dark }: { dark: boolean }) {
@@ -395,8 +163,8 @@ function ParallaxPhoto({ dark }: { dark: boolean }) {
                 }}
             >
                 <motion.img
-                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=85"
-                    alt="Amirreza Mousavi"
+                    src="https://media.licdn.com/dms/image/v2/D5603AQE5iTRedUZuRg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1711272885603?e=1774483200&v=beta&t=jdNlHqDUak55AqWd_Py57OHjdn3R9ApfBmSIhQNLZXE"
+                    alt="Sayam Das"
                     draggable={false}
                     style={{
                         width: "100%",
@@ -448,7 +216,7 @@ function ParallaxPhoto({ dark }: { dark: boolean }) {
                 <MapPin size={13} color="#f5a623" strokeWidth={2.5} />
                 <span
                     style={{
-                        fontFamily: "'Syne', sans-serif",
+                        fontFamily: "'Bricolage Grotesque', sans-serif",
                         fontSize: "0.72rem",
                         fontWeight: 700,
                         color: dark ? "#f0efea" : "#111110",
@@ -456,7 +224,7 @@ function ParallaxPhoto({ dark }: { dark: boolean }) {
                         whiteSpace: "nowrap",
                     }}
                 >
-                    Tehran, Iran
+                    Kolkata, India
                 </span>
             </motion.div>
 
@@ -491,7 +259,7 @@ function ParallaxPhoto({ dark }: { dark: boolean }) {
                 />
                 <span
                     style={{
-                        fontFamily: "'Syne', sans-serif",
+                        fontFamily: "'Bricolage Grotesque', sans-serif",
                         fontSize: "0.68rem",
                         fontWeight: 700,
                         color: dark ? "#f0efea" : "#111110",
@@ -508,7 +276,6 @@ function ParallaxPhoto({ dark }: { dark: boolean }) {
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 export default function About() {
-    useLenis();
     const sectionRef = useRef<HTMLElement>(null);
     const headingRef = useRef<HTMLDivElement>(null);
     const headingInView = useInView(headingRef, { once: true, margin: "-60px" });
@@ -526,9 +293,9 @@ export default function About() {
         const observer = new MutationObserver(() => {
             setDark(document.documentElement.classList.contains("dark"));
         });
-        observer.observe(document.documentElement, { 
-            attributes: true, 
-            attributeFilter: ['class'] 
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
         });
         return () => observer.disconnect();
     }, []);
@@ -543,12 +310,12 @@ export default function About() {
     return (
         <>
             <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Yanone+Kaffeesatz:wght@200..700&family=Syne:wght@400;600;700;800;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         html, body {
           background: ${bg};
-          font-family: 'DM Sans', sans-serif;
+          font-family: 'Funnel Display', sans-serif;
           min-height: 100vh;
           transition: background 0.35s;
         }
@@ -662,7 +429,7 @@ export default function About() {
                         <div style={{ flex: 1, height: 1, background: border }} />
                         <h2
                             style={{
-                                fontFamily: "'Syne', sans-serif",
+                                fontFamily: "'Bricolage Grotesque', sans-serif",
                                 fontWeight: 900,
                                 fontSize: "clamp(2.2rem, 5.5vw, 4.2rem)",
                                 letterSpacing: "-0.038em",
@@ -727,7 +494,7 @@ export default function About() {
                                     />
                                     <span
                                         style={{
-                                            fontFamily: "'Syne', sans-serif",
+                                            fontFamily: "'Bricolage Grotesque', sans-serif",
                                             fontSize: "0.7rem",
                                             fontWeight: 700,
                                             letterSpacing: "0.1em",
@@ -741,7 +508,7 @@ export default function About() {
 
                                 <h3
                                     style={{
-                                        fontFamily: "'Syne', sans-serif",
+                                        fontFamily: "'Bricolage Grotesque', sans-serif",
                                         fontWeight: 800,
                                         fontSize: "clamp(1.25rem, 2.5vw, 1.65rem)",
                                         letterSpacing: "-0.028em",
@@ -751,31 +518,35 @@ export default function About() {
                                         transition: "color 0.35s",
                                     }}
                                 >
-                                    Back-End Developer focused on building things that last.
+                                    Full-Stack Developer & Machine Learning Enthusiast building modern digital experiences.
                                 </h3>
 
                                 <p
                                     style={{
+                                        fontFamily: "'Funnel Display', sans-serif",
                                         fontSize: "clamp(0.84rem, 1.4vw, 0.92rem)",
                                         color: muted,
                                         lineHeight: 1.76,
                                         marginBottom: 12,
                                     }}
                                 >
-                                    I'm Amirreza Mousavi, a back-end engineer with 4+ years of experience
-                                    designing scalable server-side systems. I specialize in RESTful & GraphQL APIs,
-                                    relational and document databases, and cloud-native infrastructure.
+                                    I'm Sayam Das, a developer focused on building modern web applications
+                                    using React, Next.js, and scalable backend technologies. I enjoy creating
+                                    fast, responsive, and visually engaging digital experiences.
                                 </p>
+
                                 <p
                                     style={{
+                                        fontFamily: "'Funnel Display', sans-serif",
                                         fontSize: "clamp(0.84rem, 1.4vw, 0.92rem)",
                                         color: muted,
                                         lineHeight: 1.76,
                                     }}
                                 >
-                                    When I'm not architecting APIs, I'm exploring distributed systems, contributing
-                                    to open-source, or mentoring junior developers. I believe good software is
-                                    invisible — it just works.
+                                    Beyond web development, I explore Python and Machine Learning,
+                                    experimenting with data-driven systems and intelligent applications.
+                                    I'm passionate about learning new technologies and solving real-world
+                                    problems through code.
                                 </p>
 
                                 {/* Social + resume */}
@@ -798,7 +569,7 @@ export default function About() {
                                             borderRadius: 9999,
                                             background: text,
                                             color: bg,
-                                            fontFamily: "'Syne', sans-serif",
+                                            fontFamily: "'Bricolage Grotesque', sans-serif",
                                             fontSize: "0.8rem",
                                             fontWeight: 700,
                                             letterSpacing: "0.02em",
@@ -836,91 +607,6 @@ export default function About() {
                                     ))}
                                 </div>
                             </motion.div>
-
-                            {/* Bottom: skills + timeline */}
-                            <div className="bottom-grid">
-
-                                {/* Skills */}
-                                <motion.div
-                                    initial={{ opacity: 0, y: 28 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true, margin: "-40px" }}
-                                    transition={{ delay: 0.1, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-                                    style={{
-                                        background: cardBg,
-                                        border: `1px solid ${border}`,
-                                        borderRadius: 20,
-                                        padding: "clamp(20px, 3vw, 30px)",
-                                        transition: "background 0.35s, border-color 0.35s",
-                                    }}
-                                >
-                                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 22 }}>
-                                        <motion.div
-                                            initial={{ scaleX: 0, originX: 0 }}
-                                            whileInView={{ scaleX: 1 }}
-                                            viewport={{ once: true }}
-                                            transition={{ duration: 0.4 }}
-                                            style={{ width: 20, height: 3, borderRadius: 99, background: "#4caf7d" }}
-                                        />
-                                        <span
-                                            style={{
-                                                fontFamily: "'Syne', sans-serif", fontSize: "0.7rem", fontWeight: 700,
-                                                letterSpacing: "0.1em", color: "#4caf7d", textTransform: "uppercase",
-                                            }}
-                                        >
-                                            Tech Stack
-                                        </span>
-                                    </div>
-
-                                    {SKILLS.map((skill, i) => (
-                                        <SkillBar key={skill.name} skill={skill} index={i} dark={dark} />
-                                    ))}
-                                </motion.div>
-
-                                {/* Timeline */}
-                                <motion.div
-                                    initial={{ opacity: 0, y: 28 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true, margin: "-40px" }}
-                                    transition={{ delay: 0.18, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-                                    style={{
-                                        background: cardBg,
-                                        border: `1px solid ${border}`,
-                                        borderRadius: 20,
-                                        padding: "clamp(20px, 3vw, 30px)",
-                                        transition: "background 0.35s, border-color 0.35s",
-                                    }}
-                                >
-                                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 24 }}>
-                                        <motion.div
-                                            initial={{ scaleX: 0, originX: 0 }}
-                                            whileInView={{ scaleX: 1 }}
-                                            viewport={{ once: true }}
-                                            transition={{ duration: 0.4 }}
-                                            style={{ width: 20, height: 3, borderRadius: 99, background: "#f5a623" }}
-                                        />
-                                        <span
-                                            style={{
-                                                fontFamily: "'Syne', sans-serif", fontSize: "0.7rem", fontWeight: 700,
-                                                letterSpacing: "0.1em", color: "#f5a623", textTransform: "uppercase",
-                                            }}
-                                        >
-                                            Experience
-                                        </span>
-                                    </div>
-
-                                    {TIMELINE.map((item, i) => (
-                                        <TimelineItem
-                                            key={item.year}
-                                            item={item}
-                                            index={i}
-                                            dark={dark}
-                                            isLast={i === TIMELINE.length - 1}
-                                        />
-                                    ))}
-                                </motion.div>
-
-                            </div>
                         </div>
 
                         {/* Right: photo */}

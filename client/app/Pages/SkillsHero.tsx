@@ -74,7 +74,7 @@ function FloatingOrb({ orb, dark }: { orb: TechOrb; dark: boolean }) {
         >
             <span
                 style={{
-                    fontFamily: "'Syne', sans-serif",
+                    fontFamily: "'Bricolage Grotesque', sans-serif",
                     fontWeight: 800,
                     fontSize: orb.size * 0.24,
                     color: dark ? orb.color : orb.color + "cc",
@@ -129,7 +129,7 @@ export default function SkillsHero({ dark, bg, text, muted, border, chevBg }: Sk
                 <div style={{ position: "relative", zIndex: 3, textAlign: "center", padding: "0 24px" }}>
                     <h1
                         style={{
-                            fontFamily: "'Syne', sans-serif",
+                            fontFamily: "'Bricolage Grotesque', sans-serif",
                             fontWeight: 900,
                             fontSize: "clamp(3rem, 8vw, 6.5rem)",
                             letterSpacing: "-0.045em",
@@ -198,7 +198,7 @@ export default function SkillsHero({ dark, bg, text, muted, border, chevBg }: Sk
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2, duration: 0.6 }}
                     style={{
-                        fontFamily: "'Syne', sans-serif",
+                        fontFamily: "'Bricolage Grotesque', sans-serif",
                         fontSize: "0.72rem",
                         fontWeight: 800,
                         letterSpacing: "0.18em",
@@ -214,7 +214,7 @@ export default function SkillsHero({ dark, bg, text, muted, border, chevBg }: Sk
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     transition={{ delay: 0.3, duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
                     style={{
-                        fontFamily: "'Syne', sans-serif",
+                        fontFamily: "'Bricolage Grotesque', sans-serif",
                         fontWeight: 900,
                         fontSize: "clamp(3rem, 8vw, 6.5rem)",
                         letterSpacing: "-0.045em",
@@ -239,7 +239,7 @@ export default function SkillsHero({ dark, bg, text, muted, border, chevBg }: Sk
                 >
                     Technologies I&apos;ve worked with across{" "}
                     <span style={{ color: text, fontWeight: 600 }}>4+ years</span>{" "}
-                    of back-end engineering
+                    of frontend engineering
                 </motion.p>
             </div>
         </motion.div>

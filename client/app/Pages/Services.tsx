@@ -9,7 +9,6 @@ import {
     useTransform,
     useSpring,
 } from "framer-motion";
-import Lenis from "@studio-freight/lenis";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -29,100 +28,122 @@ interface TechLogo {
     color: string;
     label: string;
     shape: "hex" | "circle" | "rounded";
-}
-
-// ─── Lenis Hook ───────────────────────────────────────────────────────────────
-function useLenis() {
-    useEffect(() => {
-        const lenis = new Lenis({
-            duration: 1.25,
-            easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            smooth: true,
-        } as any);
-
-        let rafId: number;
-        function raf(time: number) {
-            lenis.raf(time);
-            rafId = requestAnimationFrame(raf);
-        }
-        rafId = requestAnimationFrame(raf);
-        return () => {
-            cancelAnimationFrame(rafId);
-            lenis.destroy();
-        };
-    }, []);
+    icon: string;
 }
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const SERVICES: Service[] = [
     {
-        title: "API Development & Integration",
+        title: "Full-Stack Web Development",
         description:
-            "Designing and implementing secure, scalable APIs to connect applications seamlessly.",
+            "Building modern, responsive web applications using React, Next.js, and scalable backend technologies.",
         features: [
-            "RESTful & GraphQL API development",
-            "Third-party service integrations",
-            "Authentication & authorization systems",
-            "Optimized data transfer for performance",
+            "React & Next.js application development",
+            "Server-side rendering & API routes",
+            "Modern UI architecture",
+            "Performance-focused web applications",
         ],
-        tags: ["#API", "#DOT", "#Node.JS"],
-        imageUrl: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80",
-        imageAlt: "API Development",
+        tags: ["#React", "#NextJS", "#TypeScript"],
+        imageUrl: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&q=80",
+        imageAlt: "Full Stack Web Development",
         accentColor: "#7c6fcd",
     },
     {
-        title: "Database Architecture",
+        title: "Backend & API Development",
         description:
-            "Building robust, high-performance database solutions tailored to complex data requirements.",
+            "Designing secure and scalable backend systems to power modern web platforms.",
         features: [
-            "Relational & NoSQL database design",
-            "Query optimization & indexing",
-            "Data migration & versioning",
-            "Replication & high-availability setups",
+            "REST API development",
+            "Node.js server architecture",
+            "Authentication systems",
+            "Database integration",
         ],
-        tags: ["#PostgreSQL", "#MongoDB", "#Redis"],
-        imageUrl: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80",
-        imageAlt: "Database Architecture",
+        tags: ["#NodeJS", "#API", "#Backend"],
+        imageUrl: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=800&q=80",
+        imageAlt: "Backend Development",
         accentColor: "#5b9e7f",
     },
     {
-        title: "Cloud Infrastructure",
+        title: "Machine Learning Projects",
         description:
-            "Architecting and deploying scalable cloud environments to power modern applications.",
+            "Building intelligent systems using Python and machine learning techniques to solve real-world problems.",
         features: [
-            "AWS / GCP / Azure deployments",
-            "Container orchestration with Docker & K8s",
-            "CI/CD pipeline configuration",
-            "Infrastructure as code with Terraform",
+            "Data preprocessing & feature engineering",
+            "ML model training",
+            "Prediction & data analysis",
+            "ML experimentation and research",
         ],
-        tags: ["#AWS", "#Docker", "#Terraform"],
-        imageUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80",
-        imageAlt: "Cloud Infrastructure",
+        tags: ["#Python", "#MachineLearning", "#AI"],
+        imageUrl: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
+        imageAlt: "Machine Learning",
         accentColor: "#d97c4a",
     },
     {
-        title: "Performance Optimization",
+        title: "Modern Web UI & Performance",
         description:
-            "Profiling and refining backend systems to achieve peak throughput and low latency.",
+            "Creating fast, interactive, and visually engaging web interfaces with modern animation systems.",
         features: [
-            "Load testing & bottleneck analysis",
-            "Caching strategies (Redis, Memcached)",
-            "Async processing & message queues",
-            "Microservices decomposition",
+            "Framer Motion animations",
+            "Lenis smooth scrolling",
+            "Responsive UI systems",
+            "Optimized frontend performance",
         ],
-        tags: ["#Performance", "#Redis", "#RabbitMQ"],
-        imageUrl: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=800&q=80",
-        imageAlt: "Performance Optimization",
+        tags: ["#FramerMotion", "#UIUX", "#WebPerformance"],
+        imageUrl: "https://images.unsplash.com/photo-1559028012-481c04fa702d?w=800&q=80",
+        imageAlt: "Modern UI Development",
         accentColor: "#c45f87",
     },
 ];
 
 const TECH_LOGOS: TechLogo[] = [
-    { name: "C#", bg: "#7c3fa8", color: "#fff", label: "C#", shape: "hex" },
-    { name: "Node", bg: "#0f0f0f", color: "#73b55a", label: "node", shape: "circle" },
-    { name: "VS", bg: "#8661c5", color: "#fff", label: "VS", shape: "rounded" },
-    { name: "Figma", bg: "#1a1a1a", color: "#f24e1e", label: "Fig", shape: "rounded" },
-    { name: ".NET", bg: "#6b3fcb", color: "#fff", label: ".NET", shape: "circle" },
+    {
+        name: "React",
+        bg: "#61dafb",
+        color: "#0ea5e9",
+        label: "React",
+        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
+        shape: "circle",
+    },
+    {
+        name: "Next.js",
+        bg: "#000000",
+        color: "#ffffff",
+        label: "Next.js",
+        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg",
+        shape: "rounded",
+    },
+    {
+        name: "TypeScript",
+        bg: "#3178c6",
+        color: "#ffffff",
+        label: "TypeScript",
+        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
+        shape: "hex",
+    },
+    {
+        name: "Node.js",
+        bg: "#68a063",
+        color: "#ffffff",
+        label: "Node.js",
+        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg",
+        shape: "circle",
+    },
+    {
+        name: "Python",
+        bg: "#3776ab",
+        color: "#ffd43b",
+        label: "Python",
+        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
+        shape: "rounded",
+    },
+    {
+        name: "Machine Learning",
+        bg: "#ff6f00",
+        color: "#ffffff",
+        label: "Machine Learning",
+        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg",
+        shape: "hex",
+    },
 ];
 
 // ─── Animation variants ───────────────────────────────────────────────────────
@@ -182,31 +203,29 @@ function TechBadge({ logo, index }: { logo: TechLogo; index: number }) {
                     width: "clamp(68px, 10vw, 92px)",
                     height: "clamp(68px, 10vw, 92px)",
                     borderRadius,
-                    background: logo.bg,
+                    background: "#ffffff",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     boxShadow: "0 8px 28px rgba(0,0,0,0.22)",
                     cursor: "default",
                     flexShrink: 0,
+                    padding: "clamp(12px, 2vw, 18px)",
                 }}
                 whileHover={{ scale: 1.1, rotate: 4, y: -5 }}
                 whileTap={{ scale: 0.95 }}
                 transition={{ type: "spring", stiffness: 320, damping: 18 }}
             >
-                <span
+                <img
+                    src={logo.icon}
+                    alt={logo.name}
                     style={{
-                        fontFamily: "'Syne', sans-serif",
-                        fontWeight: 900,
-                        fontSize: logo.label.length > 3 ? "0.75rem" : "1.05rem",
-                        color: logo.color,
-                        letterSpacing: "-0.02em",
-                        lineHeight: 1,
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain",
                         userSelect: "none",
                     }}
-                >
-                    {logo.label}
-                </span>
+                />
             </motion.div>
         </motion.div>
     );
@@ -240,7 +259,6 @@ function ParallaxImage({ src, alt }: { src: string; alt: string }) {
                     height: "110%",
                     objectFit: "cover",
                     display: "block",
-                    filter: "grayscale(100%) contrast(1.07)",
                     y,
                     position: "absolute",
                     top: "-5%",
@@ -295,7 +313,7 @@ function ServiceSlide({ service, dark }: { service: Service; dark: boolean }) {
 
                 <h3
                     style={{
-                        fontFamily: "'Syne', sans-serif",
+                        fontFamily: "'Bricolage Grotesque', sans-serif",
                         fontWeight: 800,
                         fontSize: "clamp(1.2rem, 2.6vw, 1.75rem)",
                         letterSpacing: "-0.025em",
@@ -324,7 +342,7 @@ function ServiceSlide({ service, dark }: { service: Service; dark: boolean }) {
                         fontWeight: 600,
                         color: dark ? "rgba(240,239,234,0.38)" : "rgba(0,0,0,0.38)",
                         marginBottom: 14,
-                        fontFamily: "'Syne', sans-serif",
+                        fontFamily: "'Bricolage Grotesque', sans-serif",
                     }}
                 >
                     Features:
@@ -378,8 +396,8 @@ function ServiceSlide({ service, dark }: { service: Service; dark: boolean }) {
                             initial={{ opacity: 0, y: 8 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.35 }}
-                                style={{
-                                fontFamily: "'Syne', sans-serif",
+                            style={{
+                                fontFamily: "'Bricolage Grotesque', sans-serif",
                                 fontSize: "0.75rem",
                                 fontWeight: 700,
                                 letterSpacing: "0.04em",
@@ -411,7 +429,6 @@ function ServiceSlide({ service, dark }: { service: Service; dark: boolean }) {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function Services() {
-    useLenis();
     const [current, setCurrent] = useState(0);
     const [direction, setDirection] = useState(1);
     const sectionRef = useRef<HTMLElement>(null);
@@ -430,9 +447,9 @@ export default function Services() {
         const observer = new MutationObserver(() => {
             setDark(document.documentElement.classList.contains("dark"));
         });
-        observer.observe(document.documentElement, { 
-            attributes: true, 
-            attributeFilter: ['class'] 
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
         });
         return () => observer.disconnect();
     }, []);
@@ -490,7 +507,7 @@ export default function Services() {
                     width: "100%",
                     padding: "clamp(48px, 8vw, 96px) 0 clamp(56px, 9vw, 112px)",
                     background: bg,
-                    fontFamily: "'DM Sans', sans-serif",
+                    fontFamily: "'Funnel Display', sans-serif",
                     transition: "background 0.35s",
                     position: "relative",
                 }}
@@ -521,7 +538,7 @@ export default function Services() {
                         <div style={{ flex: 1, height: 1, background: border }} aria-hidden="true" />
                         <h2
                             style={{
-                                fontFamily: "'Syne', sans-serif",
+                                fontFamily: "'Bricolage Grotesque', sans-serif",
                                 fontWeight: 900,
                                 fontSize: "clamp(2rem, 5.5vw, 4rem)",
                                 letterSpacing: "-0.038em",

@@ -6,7 +6,7 @@ import Projects from './Pages/Project'
 import About from './Pages/About'
 import Education from './Pages/Education'
 import Skills from './Pages/Skills'
-import Testimonials from './Pages/Testimonials'
+// import Testimonials from './Pages/Testimonials'
 import Contact from './Pages/Contact'
 import Footer from './components/Footer'
 
@@ -20,7 +20,7 @@ export default function page() {
       <Education />
       <Skills />
       <Projects />
-      <Testimonials />
+      {/* <Testimonials /> */}
       <Contact />
       <Footer />
     </div>

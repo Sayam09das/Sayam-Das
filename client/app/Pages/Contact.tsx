@@ -9,7 +9,6 @@ import {
     useSpring,
     AnimatePresence,
 } from "framer-motion";
-import Lenis from "@studio-freight/lenis";
 import {
     Mail,
     Phone,
@@ -22,51 +21,36 @@ import {
     CheckCircle,
 } from "lucide-react";
 
-// ─── Lenis ───────────────────────────────────────────────────────────────────
-function useLenis() {
-    useEffect(() => {
-        const lenis = new Lenis({
-            duration: 1.25,
-            easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            smooth: true,
-        } as any);
-        let id: number;
-        const raf = (time: number) => { lenis.raf(time); id = requestAnimationFrame(raf); };
-        id = requestAnimationFrame(raf);
-        return () => { cancelAnimationFrame(id); lenis.destroy(); };
-    }, []);
-}
-
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const CONTACT_INFO = [
-    { icon: Mail, label: "Email", value: "hello@example.com", accent: "#7c6fcd" },
-    { icon: Phone, label: "Phone", value: "+1 234 567 890", accent: "#4caf7d" },
-    { icon: MapPin, label: "Location", value: "New York, USA", accent: "#f5a623" },
-    { icon: Clock, label: "Availability", value: "Mon-Fri, 9AM-6PM", accent: "#e535ab" },
+    { icon: Mail, label: "Email", value: "dassayam9124@gmail.com", accent: "#7c6fcd" },
+    { icon: Phone, label: "Phone", value: "+91 9635825787", accent: "#4caf7d" },
+    { icon: MapPin, label: "Location", value: "Kolkata, India", accent: "#f5a623" },
+    { icon: Clock, label: "Availability", value: "Open to Internship / Freelance", accent: "#e535ab" },
 ];
 
 const SOCIALS = [
-    { icon: Github, href: "https://github.com", label: "GitHub", color: "#f0efea" },
-    { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn", color: "#0077b5" },
-    { icon: MessageCircle, href: "https://t.me", label: "Telegram", color: "#0088cc" },
+    { icon: Github, href: "https://github.com/Sayam09das", label: "GitHub", color: "#f0efea" },
+    { icon: Linkedin, href: "https://www.linkedin.com/in/sayam-das-43a703287/", label: "LinkedIn", color: "#0077b5" },
+    { icon: Mail, href: "mailto:hello@sayamd.as", label: "Email", color: "#7c6fcd" },
 ];
 
 const FAQS = [
     {
-        question: "What's your typical project timeline?",
-        answer: "Timeline varies based on scope. Small projects take 1-2 weeks, while larger ones may require 2-3 months with ongoing support.",
+        question: "What technologies do you work with?",
+        answer: "I primarily work with React, Next.js, TypeScript, Node.js, and MongoDB for full-stack development. I also use Python for machine learning and data-related projects.",
     },
     {
-        question: "Do you offer ongoing maintenance?",
-        answer: "Yes! I provide post-launch support and maintenance packages to keep your project running smoothly.",
+        question: "What type of projects do you build?",
+        answer: "I build modern web applications, developer tools, and machine learning projects. My focus is on fast, scalable, and visually engaging applications.",
     },
     {
-        question: "What industries do you work with?",
-        answer: "I work across various industries including fintech, e-commerce, healthcare, and SaaS products.",
+        question: "Are you open to internships or collaborations?",
+        answer: "Yes! I’m currently open to internships, research collaborations, and freelance opportunities where I can contribute to real-world products and learn from experienced teams.",
     },
     {
-        question: "How do you handle project communication?",
-        answer: "I use Slack/Discord for daily updates, weekly video calls for progress reviews, and share detailed documentation via Notion.",
+        question: "How can someone contact you?",
+        answer: "You can reach me through email or connect with me on GitHub and LinkedIn. I usually respond within 24 hours.",
     },
 ];
 
@@ -116,7 +100,7 @@ function ContactForm({ dark }: { dark: boolean }) {
                 </motion.div>
                 <h3
                     style={{
-                        fontFamily: "'Syne', sans-serif",
+                        fontFamily: "'Bricolage Grotesque', sans-serif",
                         fontWeight: 800,
                         fontSize: "1.5rem",
                         color: dark ? "#f0efea" : "#111110",
@@ -146,7 +130,7 @@ function ContactForm({ dark }: { dark: boolean }) {
                         background: dark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
                         border: `1px solid ${dark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"}`,
                         color: dark ? "#f0efea" : "#111110",
-                        fontFamily: "'Syne', sans-serif",
+                        fontFamily: "'Bricolage Grotesque', sans-serif",
                         fontSize: "0.85rem",
                         fontWeight: 600,
                         cursor: "pointer",
@@ -319,7 +303,7 @@ function ContactForm({ dark }: { dark: boolean }) {
                     background: dark ? "#f0efea" : "#111110",
                     color: dark ? "#111110" : "#f0efea",
                     border: "none",
-                    fontFamily: "'Syne', sans-serif",
+                    fontFamily: "'Bricolage Grotesque', sans-serif",
                     fontSize: "0.95rem",
                     fontWeight: 700,
                     letterSpacing: "0.02em",
@@ -392,7 +376,7 @@ function FAQItem({ item, index, dark }: { item: (typeof FAQS)[0]; index: number;
             >
                 <span
                     style={{
-                        fontFamily: "'Syne', sans-serif",
+                        fontFamily: "'Bricolage Grotesque', sans-serif",
                         fontSize: "0.95rem",
                         fontWeight: 600,
                         color: dark ? "#f0efea" : "#111110",
@@ -503,7 +487,7 @@ function ContactCard({ item, index, dark }: { item: (typeof CONTACT_INFO)[0]; in
                 </div>
                 <div
                     style={{
-                        fontFamily: "'Syne', sans-serif",
+                        fontFamily: "'Bricolage Grotesque', sans-serif",
                         fontSize: "0.92rem",
                         fontWeight: 600,
                         color: dark ? "#f0efea" : "#111110",
@@ -550,7 +534,7 @@ function SocialLink({ item, index, dark }: { item: (typeof SOCIALS)[0]; index: n
             <Icon size={20} color={item.color} strokeWidth={1.8} />
             <span
                 style={{
-                    fontFamily: "'Syne', sans-serif",
+                    fontFamily: "'Bricolage Grotesque', sans-serif",
                     fontSize: "0.85rem",
                     fontWeight: 600,
                     color: dark ? "#f0efea" : "#111110",
@@ -565,7 +549,6 @@ function SocialLink({ item, index, dark }: { item: (typeof SOCIALS)[0]; index: n
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 export default function Contact() {
-    useLenis();
     const sectionRef = useRef<HTMLElement>(null);
     const headingRef = useRef<HTMLDivElement>(null);
     const headingInView = useInView(headingRef, { once: true, margin: "-60px" });
@@ -583,9 +566,9 @@ export default function Contact() {
         const observer = new MutationObserver(() => {
             setDark(document.documentElement.classList.contains("dark"));
         });
-        observer.observe(document.documentElement, { 
-            attributes: true, 
-            attributeFilter: ['class'] 
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
         });
         return () => observer.disconnect();
     }, []);
@@ -605,7 +588,7 @@ export default function Contact() {
 
         html, body {
           background: ${bg};
-          font-family: 'DM Sans', sans-serif;
+          font-family: 'Funnel Display', sans-serif;
           min-height: 100vh;
           transition: background 0.35s;
         }
@@ -704,7 +687,7 @@ export default function Contact() {
                         <div style={{ flex: 1, height: 1, background: border }} />
                         <h2
                             style={{
-                                fontFamily: "'Syne', sans-serif",
+                                fontFamily: "'Bricolage Grotesque', sans-serif",
                                 fontWeight: 900,
                                 fontSize: "clamp(2.2rem, 5.5vw, 4.2rem)",
                                 letterSpacing: "-0.038em",
@@ -761,7 +744,7 @@ export default function Contact() {
                                     />
                                     <span
                                         style={{
-                                            fontFamily: "'Syne', sans-serif",
+                                            fontFamily: "'Bricolage Grotesque', sans-serif",
                                             fontSize: "0.7rem",
                                             fontWeight: 700,
                                             letterSpacing: "0.1em",
@@ -775,7 +758,7 @@ export default function Contact() {
 
                                 <h3
                                     style={{
-                                        fontFamily: "'Syne', sans-serif",
+                                        fontFamily: "'Bricolage Grotesque', sans-serif",
                                         fontWeight: 800,
                                         fontSize: "clamp(1.25rem, 2.5vw, 1.65rem)",
                                         letterSpacing: "-0.028em",
@@ -835,7 +818,7 @@ export default function Contact() {
                                     />
                                     <span
                                         style={{
-                                            fontFamily: "'Syne', sans-serif",
+                                            fontFamily: "'Bricolage Grotesque', sans-serif",
                                             fontSize: "0.7rem",
                                             fontWeight: 700,
                                             letterSpacing: "0.1em",
@@ -849,7 +832,7 @@ export default function Contact() {
 
                                 <h3
                                     style={{
-                                        fontFamily: "'Syne', sans-serif",
+                                        fontFamily: "'Bricolage Grotesque', sans-serif",
                                         fontWeight: 800,
                                         fontSize: "clamp(1.25rem, 2.5vw, 1.65rem)",
                                         letterSpacing: "-0.028em",
@@ -909,7 +892,7 @@ export default function Contact() {
                                     />
                                     <span
                                         style={{
-                                            fontFamily: "'Syne', sans-serif",
+                                            fontFamily: "'Bricolage Grotesque', sans-serif",
                                             fontSize: "0.7rem",
                                             fontWeight: 700,
                                             letterSpacing: "0.1em",
@@ -923,7 +906,7 @@ export default function Contact() {
 
                                 <h3
                                     style={{
-                                        fontFamily: "'Syne', sans-serif",
+                                        fontFamily: "'Bricolage Grotesque', sans-serif",
                                         fontWeight: 800,
                                         fontSize: "clamp(1.25rem, 2.5vw, 1.65rem)",
                                         letterSpacing: "-0.028em",

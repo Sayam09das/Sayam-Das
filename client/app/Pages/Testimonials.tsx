@@ -10,23 +10,7 @@ import {
     useMotionValue,
     AnimatePresence,
 } from "framer-motion";
-import Lenis from "@studio-freight/lenis";
 import { Quote, Star, ChevronLeft, ChevronRight, ArrowUpRight } from "lucide-react";
-
-// ─── Lenis ───────────────────────────────────────────────────────────────────
-function useLenis() {
-    useEffect(() => {
-        const lenis = new Lenis({
-            duration: 1.3,
-            easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            smooth: true,
-        } as any);
-        let id: number;
-        const raf = (time: number) => { lenis.raf(time); id = requestAnimationFrame(raf); };
-        id = requestAnimationFrame(raf);
-        return () => { cancelAnimationFrame(id); lenis.destroy(); };
-    }, []);
-}
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 interface Testimonial {
@@ -314,7 +298,7 @@ function FeaturedCard({ t, dark }: { t: Testimonial; dark: boolean }) {
                                     <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2 }}>
                                         <span
                                             style={{
-                                                fontFamily: "'Syne', sans-serif",
+                                                fontFamily: "'Bricolage Grotesque', sans-serif",
                                                 fontWeight: 800,
                                                 fontSize: "1rem",
                                                 letterSpacing: "-0.018em",
@@ -336,7 +320,7 @@ function FeaturedCard({ t, dark }: { t: Testimonial; dark: boolean }) {
                                 <StarRating rating={t.rating} color={t.accent} inView={inView} delay={0.4} />
                                 <span
                                     style={{
-                                        fontFamily: "'Syne', sans-serif",
+                                        fontFamily: "'Bricolage Grotesque', sans-serif",
                                         fontSize: "0.65rem",
                                         fontWeight: 700,
                                         letterSpacing: "0.06em",
@@ -393,7 +377,7 @@ function FeaturedCard({ t, dark }: { t: Testimonial; dark: boolean }) {
                                 />
                                 <span
                                     style={{
-                                        fontFamily: "'Syne', sans-serif",
+                                        fontFamily: "'Bricolage Grotesque', sans-serif",
                                         fontSize: "0.68rem",
                                         fontWeight: 800,
                                         letterSpacing: "0.06em",
@@ -499,7 +483,7 @@ function MiniCard({ t, index, dark }: { t: Testimonial; index: number; dark: boo
                                 <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
                                     <span
                                         style={{
-                                            fontFamily: "'Syne', sans-serif",
+                                            fontFamily: "'Bricolage Grotesque', sans-serif",
                                             fontWeight: 800,
                                             fontSize: "0.82rem",
                                             letterSpacing: "-0.015em",
@@ -552,7 +536,7 @@ function MiniCard({ t, index, dark }: { t: Testimonial; index: number; dark: boo
                         >
                             <span
                                 style={{
-                                    fontFamily: "'Syne', sans-serif",
+                                    fontFamily: "'Bricolage Grotesque', sans-serif",
                                     fontSize: "0.62rem",
                                     fontWeight: 700,
                                     letterSpacing: "0.08em",
@@ -598,7 +582,7 @@ function StatPill({ stat, index, dark }: { stat: typeof STATS[0]; index: number;
         >
             <div
                 style={{
-                    fontFamily: "'Syne', sans-serif",
+                    fontFamily: "'Bricolage Grotesque', sans-serif",
                     fontWeight: 900,
                     fontSize: "clamp(1.6rem, 3.5vw, 2.4rem)",
                     letterSpacing: "-0.045em",
@@ -652,7 +636,7 @@ function Carousel({ dark }: { dark: boolean }) {
                         />
                         <span
                             style={{
-                                fontFamily: "'Syne', sans-serif",
+                                fontFamily: "'Bricolage Grotesque', sans-serif",
                                 fontSize: "0.68rem", fontWeight: 800,
                                 letterSpacing: "0.12em", color: "#7c6fcd",
                                 textTransform: "uppercase",
@@ -768,7 +752,7 @@ function AvatarMarquee({ dark }: { dark: boolean }) {
                         />
                         <span
                             style={{
-                                fontFamily: "'Syne', sans-serif",
+                                fontFamily: "'Bricolage Grotesque', sans-serif",
                                 fontSize: "0.72rem",
                                 fontWeight: 700,
                                 color: dark ? "rgba(240,239,234,0.7)" : "rgba(0,0,0,0.65)",
@@ -792,7 +776,6 @@ function AvatarMarquee({ dark }: { dark: boolean }) {
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 export default function Testimonials() {
-    useLenis();
     const sectionRef = useRef<HTMLElement>(null);
     const headingRef = useRef<HTMLDivElement>(null);
     const headingInView = useInView(headingRef, { once: true, margin: "-60px" });
@@ -833,7 +816,7 @@ export default function Testimonials() {
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html, body {
           background: ${bg};
-          font-family: 'DM Sans', sans-serif;
+          font-family: 'Funnel Display', sans-serif;
           min-height: 100vh;
           transition: background 0.35s;
           overflow-x: hidden;
@@ -913,7 +896,7 @@ export default function Testimonials() {
                         }}>
                             <div style={{ flex: 1, height: 1, background: border }} />
                             <h2 style={{
-                                fontFamily: "'Syne', sans-serif",
+                                fontFamily: "'Bricolage Grotesque', sans-serif",
                                 fontWeight: 900,
                                 fontSize: "clamp(2.2rem, 5.5vw, 4.2rem)",
                                 letterSpacing: "-0.038em",
@@ -982,7 +965,7 @@ export default function Testimonials() {
                                     style={{ width: 22, height: 3, borderRadius: 99, background: "#4caf7d" }}
                                 />
                                 <span style={{
-                                    fontFamily: "'Syne', sans-serif",
+                                    fontFamily: "'Bricolage Grotesque', sans-serif",
                                     fontSize: "0.68rem", fontWeight: 800,
                                     letterSpacing: "0.12em", color: "#4caf7d",
                                     textTransform: "uppercase",
