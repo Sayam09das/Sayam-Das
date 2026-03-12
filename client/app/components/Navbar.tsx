@@ -38,30 +38,29 @@ export default function Navbar() {
         return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
-    // Auto dark mode based on time
+    // Auto dark mode based on time (manual toggle priority)
     useEffect(() => {
+        const savedTheme = localStorage.getItem("theme");
         const hour = new Date().getHours();
-        const shouldBeDark = hour >= 18 || hour < 6;
-        if (shouldBeDark !== isDark) {
-            document.documentElement.classList.toggle('dark', shouldBeDark);
-            localStorage.setItem("theme", shouldBeDark ? "dark" : "light");
-            setIsDark(shouldBeDark);
-        }
+        const timeDark = hour >= 18 || hour < 6;
+        const shouldDark = savedTheme ? savedTheme === "dark" : timeDark;
+
+        document.documentElement.classList.toggle('dark', shouldDark);
+        setIsDark(shouldDark);
 
         const listener = () => {
-            const hour = new Date().getHours();
-            const newDark = hour >= 18 || hour < 6;
-            if (newDark !== isDark) {
+            const currentSaved = localStorage.getItem("theme");
+            if (!currentSaved) { // Only auto if no manual preference
+                const h = new Date().getHours();
+                const newDark = h >= 18 || h < 6;
                 document.documentElement.classList.toggle('dark', newDark);
-                localStorage.setItem("theme", newDark ? "dark" : "light");
                 setIsDark(newDark);
             }
         };
-
-        const interval = setInterval(listener, 60000); // Check every minute
+        const interval = setInterval(listener, 60000);
 
         return () => clearInterval(interval);
-    }, []); // No deps, run once
+    }, []);
 
     // Close mobile menu on resize
     useEffect(() => {
