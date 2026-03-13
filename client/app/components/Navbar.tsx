@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Home,
@@ -9,8 +9,11 @@ import {
   FolderOpen,
   Star,
   Mail,
+  Menu,
+  X,
 } from "lucide-react";
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
+
 const NAV_LINKS = [
   { label: "About", icon: User2, href: "/#about" },
   { label: "Services", icon: Briefcase, href: "/#services" },
@@ -21,10 +24,10 @@ const NAV_LINKS = [
 
 // ─── Navbar component ─────────────────────────────────────────────────────────
 export default function Navbar() {
-
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [active, setActive] = useState("Home");
+  const navRef = useRef<HTMLElement>(null);
 
   // Scroll listener for glass blur effect
   useEffect(() => {
@@ -32,8 +35,6 @@ export default function Navbar() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-
 
   // Close mobile menu on resize
   useEffect(() => {
@@ -44,7 +45,16 @@ export default function Navbar() {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-
+  // Close drawer when clicking outside
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(e.target as Node)) {
+        setMobileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
   return (
     <>
@@ -429,6 +439,7 @@ export default function Navbar() {
 
       {/* ── Navbar ────────────────────────────────────────────────────── */}
       <motion.nav
+        ref={navRef}
         className={`nav-root${scrolled ? " scrolled" : ""}`}
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -440,9 +451,7 @@ export default function Navbar() {
             <span className="avatar-fallback">SD</span>
           </div>
           <div className="brand-divider" />
-          <span className="brand-name">
-            Sayam Das
-          </span>
+          <span className="brand-name">Sayam Das</span>
         </a>
 
         {/* Center pill */}
@@ -494,14 +503,25 @@ export default function Navbar() {
             <span className="dot"></span>
             Open to work
           </a>
-          <button className="menu-btn" aria-label="Toggle menu">
-            <span style={{ display: "flex", opacity: 1, transform: "none" }}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-menu" aria-hidden="true">
-                <path d="M4 5h16"></path>
-                <path d="M4 12h16"></path>
-                <path d="M4 19h16"></path>
-              </svg>
-            </span>
+
+          {/* Hamburger / X toggle button */}
+          <button
+            className="menu-btn"
+            aria-label="Toggle menu"
+            onClick={() => setMobileOpen((o) => !o)}
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={mobileOpen ? "x" : "menu"}
+                initial={{ rotate: -90, opacity: 0, scale: 0.7 }}
+                animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                exit={{ rotate: 90, opacity: 0, scale: 0.7 }}
+                transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+              >
+                {mobileOpen ? <X size={18} /> : <Menu size={18} />}
+              </motion.span>
+            </AnimatePresence>
           </button>
         </div>
       </motion.nav>
@@ -525,15 +545,23 @@ export default function Navbar() {
                 <Home size={18} strokeWidth={2} />
                 Home
               </a>
+
               {NAV_LINKS.map(({ label, icon: Icon, href }, i) => (
                 <motion.a
                   key={label}
                   href={href}
                   className={`mobile-nav-link${active === label ? " active" : ""}`}
-                  onClick={() => { setActive(label); setMobileOpen(false); }}
+                  onClick={() => {
+                    setActive(label);
+                    setMobileOpen(false);
+                  }}
                   initial={{ x: -16, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: i * 0.055, duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{
+                    delay: i * 0.055,
+                    duration: 0.28,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
                 >
                   <Icon size={18} strokeWidth={2} />
                   {label}

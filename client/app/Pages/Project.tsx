@@ -21,68 +21,82 @@ interface Project {
     span: "tall" | "wide" | "normal";
     year: string;
     tech: string[];
+    demoUrl: string;
+    repoUrl: string;
 }
 
 const PROJECTS: Project[] = [
     {
         id: 1,
-        title: "Task Manager App",
-        category: "Web Application",
-        image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=900&q=85",
+        title: "TaskMaster Pro",
+        category: "Fullstack SaaS",
+        image: "https://mir-s3-cdn-cf.behance.net/project_modules/1400/9d4b93179374693.64f87fe05aa79.png?w=900&q=85",
         accent: "#7c6fcd",
         span: "tall",
-        year: "2025",
-        tech: ["React", "Node.js", "MongoDB"],
+        year: "2024",
+        tech: ["Next.js", "Node.js", "MongoDB"],
+        demoUrl: "https://schedulo-app-theta.vercel.app/",
+        repoUrl: "https://github.com/Sayam09das/TaskManagerProject",
     },
     {
         id: 2,
-        title: "Disease Prediction Model",
+        title: "Disease Predictor AI",
         category: "Machine Learning",
-        image: "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=900&q=85",
+        image: "https://global.discourse-cdn.com/streamlit/optimized/3X/0/c/0c59007113cefac9f1d8d8babfb4957ff73fbc65_2_1024x537.png?w=900&q=85",
         accent: "#4caf7d",
         span: "normal",
-        year: "2025",
-        tech: ["Python", "Machine Learning", "Scikit-Learn"],
+        year: "2024",
+        tech: ["Python", "Scikit-Learn", "Streamlit"],
+        demoUrl: "https://github.com/Sayam09das/Disease-Diagonistics-Model",
+        repoUrl: "https://github.com/Sayam09das/Disease-Diagonistics-Model",
     },
     {
         id: 3,
-        title: "MDAI Learning Platform",
-        category: "AI Education Tool",
-        image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=900&q=85",
+        title: "AI Chat Assistant",
+        category: "AI Application",
+        image: "https://www.verloop.io/wp-content/uploads/Top-5-examples-of-brands-using-website-chatbots-for-customer-support-13-scaled.jpg?w=900&q=85",
         accent: "#ff6b35",
         span: "normal",
-        year: "2026",
-        tech: ["Python", "Jupyter", "Machine Learning"],
+        year: "2024",
+        tech: ["Next.js", "Vercel AI", "OpenAI"],
+        demoUrl: "https://chatify-online-chatting-app.vercel.app/",
+        repoUrl: "https://github.com/Sayam09das/Chatify---Online-Chatting-App",
     },
     {
         id: 4,
-        title: "Portfolio Website",
-        category: "Developer Portfolio",
-        image: "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?w=900&q=85",
+        title: "CargoMind AI System",
+        category: "AI Optimization",
+        image: "https://htmlcodex.com/wp-content/uploads/2021/11/shipping-company-website-template.jpg?w=900&q=85",
         accent: "#5b9fd4",
         span: "wide",
-        year: "2026",
-        tech: ["Next.js", "React", "Framer Motion"],
+        year: "2024",
+        tech: ["Next.js", "React", "Framer Motion", "Tailwind"],
+        demoUrl: "XXXXXXXXX-XXXXXXXXX",
+        repoUrl: "XXXXXXXXX-XXXXXXXXX",
     },
     {
         id: 5,
-        title: "Finance Tracker",
-        category: "Web Application",
-        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=900&q=85",
+        title: "MDAI AI Learning Platform",
+        category: "AI Education",
+        image: "https://mir-s3-cdn-cf.behance.net/project_modules/1400/10913e120865113.60ba0b4e2a2a6.png?w=900&q=85",
         accent: "#e040fb",
         span: "normal",
-        year: "2026",
-        tech: ["React", "JavaScript", "Chart.js", "Local Storage"],
+        year: "2023",
+        tech: ["React", "Chart.js", "TypeScript"],
+        demoUrl: "https://mdai-self.vercel.app/",
+        repoUrl: "https://github.com/Sayam09das/MDAI",
     },
     {
         id: 6,
-        title: "Data Analysis Dashboard",
-        category: "Data Visualization",
-        image: "https://images.unsplash.com/photo-1543286386-713bdd548da4?w=900&q=85",
+        title: "Flappy Bird Clone",
+        category: "Game Development",
+        image: "https://media.cnn.com/api/v1/images/stellar/prod/140204204156-flappy-bird.jpg?q=x_0,y_0,h_720,w_1280,c_fill/h_833,w_1480",
         accent: "#f5a623",
         span: "normal",
         year: "2024",
-        tech: ["Python", "Pandas", "Matplotlib"],
+        tech: ["Html5 Canvas","Css", "JavaScript"],
+        demoUrl: "https://github.com/Sayam09das/Flappy-Bird",
+        repoUrl: "https://github.com/Sayam09das/Flappy-Bird",
     },
 ];
 
@@ -99,6 +113,7 @@ function ProjectCard({
     const ref = useRef<HTMLDivElement>(null);
     const inView = useInView(ref, { once: true, margin: "-60px" });
     const [hovered, setHovered] = useState(false);
+    const [showCode, setShowCode] = useState(false);
 
     const { scrollYProgress } = useScroll({
         target: ref,
@@ -110,6 +125,17 @@ function ProjectCard({
     // Grid span classes handled inline
     const isTall = project.span === "tall";
     const isWide = project.span === "wide";
+
+    const currentUrl = showCode ? project.repoUrl : project.demoUrl;
+
+    const handleCardClick = () => {
+        window.open(currentUrl, '_blank', 'noopener,noreferrer');
+    };
+
+    const toggleLinkType = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setShowCode(!showCode);
+    };
 
     return (
         <motion.div
@@ -230,6 +256,10 @@ function ProjectCard({
                     rotate: hovered ? 0 : -20,
                 }}
                 transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                onClick={(e) => {
+                    toggleLinkType(e);
+                    window.open(currentUrl, '_blank', 'noopener,noreferrer');
+                }}
                 style={{
                     position: "absolute",
                     top: 16,

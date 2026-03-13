@@ -50,9 +50,9 @@ export default function Footer() {
         const observer = new MutationObserver(() => {
             setDark(document.documentElement.classList.contains("dark"));
         });
-        observer.observe(document.documentElement, { 
-            attributes: true, 
-            attributeFilter: ['class'] 
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
         });
         return () => observer.disconnect();
     }, []);
@@ -310,24 +310,24 @@ export default function Footer() {
                             </h4>
                             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                                 <a
-href="mailto:hello@sayamd.as"
+                                    href="mailto:sayamdas9124@gmail.com"
                                     style={{
                                         fontSize: "0.9rem",
                                         color: muted,
                                         textDecoration: "none",
                                     }}
                                 >
-hello@sayamd.as
+                                    sayamdas9124@gmail.com
                                 </a>
                                 <a
-                                    href="tel:+1234567890"
+                                    href="tel:+91 9635825787"
                                     style={{
                                         fontSize: "0.9rem",
                                         color: muted,
                                         textDecoration: "none",
                                     }}
                                 >
-                                    +1 234 567 890
+                                    +91 9635825787
                                 </a>
                                 <span
                                     style={{
@@ -335,7 +335,7 @@ hello@sayamd.as
                                         color: muted,
                                     }}
                                 >
-                                    New York, USA
+                                    Kolkata, India
                                 </span>
                             </div>
                         </motion.div>
@@ -367,7 +367,7 @@ hello@sayamd.as
                                 color: muted,
                             }}
                         >
-                            <span>© {CURRENT_YEAR}</span>
+                            <span>© {CURRENT_YEAR} Sayam Das</span>
                             <span style={{ color: "#7c6fcd" }}>•</span>
                             <span>Crafted with</span>
                             <Heart size={14} color="#7c6fcd" fill="#7c6fcd" />

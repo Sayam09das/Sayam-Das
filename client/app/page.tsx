@@ -12,7 +12,7 @@ import Footer from './components/Footer'
 
 export default function page() {
   return (
-    <div>
+<div className="min-h-screen bg-white dark:bg-gray-900 text-black dark:text-white py-20">
       <Navbar />
       <Hero />
       <About />
@@ -20,9 +20,9 @@ export default function page() {
       <Education />
       <Skills />
       <Projects />
-      {/* <Testimonials /> */}
       <Contact />
       <Footer />
+      
     </div>
   )
 }

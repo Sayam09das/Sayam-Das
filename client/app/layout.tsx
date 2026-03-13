@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "./context/ThemeContext";
 import LenisProvider from "./components/LenisProvider";
-import { AIChatButton } from "../components/ui/ai-chat-button";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -88,7 +87,6 @@ export default function RootLayout({
         <LenisProvider>
           <ThemeProvider>
             {children}
-            <AIChatButton />
           </ThemeProvider>
         </LenisProvider>
         {typeof window !== 'undefined' && (

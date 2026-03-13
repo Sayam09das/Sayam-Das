@@ -23,7 +23,7 @@ import {
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const CONTACT_INFO = [
-    { icon: Mail, label: "Email", value: "dassayam9124@gmail.com", accent: "#7c6fcd" },
+    { icon: Mail, label: "Email", value: "sayamdas9124@gmail.com", accent: "#7c6fcd" },
     { icon: Phone, label: "Phone", value: "+91 9635825787", accent: "#4caf7d" },
     { icon: MapPin, label: "Location", value: "Kolkata, India", accent: "#f5a623" },
     { icon: Clock, label: "Availability", value: "Open to Internship / Freelance", accent: "#e535ab" },

@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 const SOCIAL = [
   { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
   { icon: Github, href: "https://github.com/Sayam09das", label: "GitHub" },
-  { icon: Mail, href: "mailto:dassayam9124@gmail.com", label: "Email" },
+{ icon: Mail, href: "mailto:sayamdas9124@gmail.com", label: "Email" },
 ];
 
 const GREETINGS = ["hello"];
@@ -30,11 +30,11 @@ export default function HeroSection() {
         @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=DM+Sans:wght@300;400;500&display=swap');
 
         /* ── CSS Variables ── */
-        :root {
-          --bg:           #f4f3ef;
-          --bg2:          #eae9e3;
-          --text:         #181816;
-          --muted:        #88887f;
+:root {
+          --bg:           #f8f9fa;
+          --bg2:          #e9ecef;
+          --text:         #000000;
+          --muted:        #495057;
           --border:       rgba(0,0,0,0.09);
           --line:         rgba(0,0,0,0.12);
           --btn-bg:       #181816;
@@ -45,11 +45,11 @@ export default function HeroSection() {
           --img-radius:   22px;
         }
 
-        html.dark {
-          --bg:           #0e0e0d;
-          --bg2:          #1b1b19;
-          --text:         #efede7;
-          --muted:        #65655d;
+html.dark {
+          --bg:           #121212;
+          --bg2:          #1e1e1e;
+          --text:         #ffffff;
+          --muted:        #b0b0b0;
           --border:       rgba(255,255,255,0.07);
           --line:         rgba(255,255,255,0.09);
           --btn-bg:       #efede7;

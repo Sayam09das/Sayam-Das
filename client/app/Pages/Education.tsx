@@ -6,13 +6,11 @@ import {
     useInView,
     useScroll,
     useTransform,
-    AnimatePresence,
 } from "framer-motion";
 import {
     GraduationCap,
     BookOpen,
     Award,
-    FlaskConical,
     Star,
     ExternalLink,
 } from "lucide-react";
@@ -123,13 +121,11 @@ function EducationCard({
     index,
     isLeft,
     dark,
-    isMobile,
 }: {
     item: EducationItem;
     index: number;
     isLeft: boolean;
     dark: boolean;
-    isMobile: boolean;
 }) {
     const ref = useRef<HTMLDivElement>(null);
     const inView = useInView(ref, { once: true, margin: "-60px" });
@@ -142,8 +138,7 @@ function EducationCard({
     const muted = dark ? "rgba(240,239,234,0.44)" : "rgba(0,0,0,0.44)";
     const tagBg = dark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.05)";
 
-    // Mobile: always slide from left; Desktop: alternate
-    const xFrom = isMobile ? -32 : isLeft ? -40 : 40;
+    const xFrom = isLeft ? -40 : 40;
 
     return (
         <motion.div
@@ -222,7 +217,6 @@ function EducationCard({
                         </motion.div>
 
                         <div>
-                            {/* Type badge */}
                             <span
                                 style={{
                                     fontFamily: "'Bricolage Grotesque', sans-serif",
@@ -237,7 +231,6 @@ function EducationCard({
                             >
                                 {TYPE_LABELS[item.type]}
                             </span>
-                            {/* Period */}
                             <span
                                 style={{
                                     fontFamily: "'Funnel Display', sans-serif",
@@ -251,7 +244,6 @@ function EducationCard({
                         </div>
                     </div>
 
-                    {/* GPA or link */}
                     <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
                         {item.gpa && (
                             <div
@@ -407,50 +399,160 @@ function TimelineDot({
     inView: boolean;
 }) {
     return (
-        <div
+        <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            animate={inView ? { scale: 1, opacity: 1 } : {}}
+            transition={{
+                delay: index * 0.1 + 0.05,
+                duration: 0.45,
+                type: "spring",
+                stiffness: 320,
+                damping: 18,
+            }}
             style={{
-                position: "absolute",
-                left: "50%",
-                transform: "translateX(-50%)",
-                top: "clamp(28px, 4vw, 36px)",
-                zIndex: 10,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
+                width: 14, height: 14,
+                borderRadius: "50%",
+                background: accent,
+                boxShadow: `0 0 14px ${accent}88`,
+                border: `2px solid ${accent}`,
+                position: "relative",
+                zIndex: 2,
+                flexShrink: 0,
             }}
         >
+            {/* Pulse ring */}
             <motion.div
-                initial={{ scale: 0, opacity: 0 }}
-                animate={inView ? { scale: 1, opacity: 1 } : {}}
-                transition={{
-                    delay: index * 0.1 + 0.05,
-                    duration: 0.45,
-                    type: "spring",
-                    stiffness: 320,
-                    damping: 18,
-                }}
+                animate={{ scale: [1, 1.8, 1], opacity: [0.5, 0, 0.5] }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                 style={{
-                    width: 14, height: 14,
+                    position: "absolute",
+                    inset: -4,
                     borderRadius: "50%",
                     background: accent,
-                    boxShadow: `0 0 14px ${accent}88`,
-                    border: `2px solid ${accent}`,
-                    position: "relative",
-                    zIndex: 2,
+                }}
+            />
+        </motion.div>
+    );
+}
+
+// ─── Desktop Timeline Row (zigzag) ────────────────────────────────────────────
+function DesktopTimelineRow({
+    item,
+    index,
+    isLeft,
+    dark,
+}: {
+    item: EducationItem;
+    index: number;
+    isLeft: boolean;
+    dark: boolean;
+}) {
+    const ref = useRef<HTMLDivElement>(null);
+    const inView = useInView(ref, { once: true, margin: "-60px" });
+
+    return (
+        <div
+            ref={ref}
+            style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 60px 1fr",
+                alignItems: "start",
+                marginBottom: 40,
+                position: "relative",
+            }}
+        >
+            {isLeft ? (
+                <>
+                    <div style={{ paddingRight: 32 }}>
+                        <EducationCard item={item} index={index} isLeft={true} dark={dark} />
+                    </div>
+                    <div style={{ position: "relative", display: "flex", justifyContent: "center" }}>
+                        <div style={{ position: "absolute", top: "clamp(28px,4vw,36px)", zIndex: 10 }}>
+                            <TimelineDot accent={item.accent} index={index} inView={inView} />
+                        </div>
+                    </div>
+                    <div />
+                </>
+            ) : (
+                <>
+                    <div />
+                    <div style={{ position: "relative", display: "flex", justifyContent: "center" }}>
+                        <div style={{ position: "absolute", top: "clamp(28px,4vw,36px)", zIndex: 10 }}>
+                            <TimelineDot accent={item.accent} index={index} inView={inView} />
+                        </div>
+                    </div>
+                    <div style={{ paddingLeft: 32 }}>
+                        <EducationCard item={item} index={index} isLeft={false} dark={dark} />
+                    </div>
+                </>
+            )}
+        </div>
+    );
+}
+
+// ─── Mobile Timeline Row (left-aligned) ───────────────────────────────────────
+function MobileTimelineRow({
+    item,
+    index,
+    dark,
+    isLast,
+    lineColor,
+}: {
+    item: EducationItem;
+    index: number;
+    dark: boolean;
+    isLast: boolean;
+    lineColor: string;
+}) {
+    const ref = useRef<HTMLDivElement>(null);
+    const inView = useInView(ref, { once: true, margin: "-60px" });
+
+    return (
+        <div
+            ref={ref}
+            style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: 0,
+                position: "relative",
+                marginBottom: isLast ? 0 : 32,
+            }}
+        >
+            {/* Left column: dot + vertical line */}
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    flexShrink: 0,
+                    width: 28,
+                    paddingTop: 20,
                 }}
             >
-                {/* Pulse ring */}
-                <motion.div
-                    animate={{ scale: [1, 1.8, 1], opacity: [0.5, 0, 0.5] }}
-                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-                    style={{
-                        position: "absolute",
-                        inset: -4,
-                        borderRadius: "50%",
-                        background: accent,
-                    }}
-                />
-            </motion.div>
+                <TimelineDot accent={item.accent} index={index} inView={inView} />
+                {/* Connecting line to next dot */}
+                {!isLast && (
+                    <motion.div
+                        initial={{ scaleY: 0 }}
+                        animate={inView ? { scaleY: 1 } : {}}
+                        transition={{ delay: index * 0.1 + 0.3, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                        style={{
+                            width: 2,
+                            flex: 1,
+                            minHeight: 32,
+                            background: lineColor,
+                            originY: 0,
+                            marginTop: 6,
+                            opacity: 0.5,
+                        }}
+                    />
+                )}
+            </div>
+
+            {/* Card */}
+            <div style={{ flex: 1, paddingLeft: 16, paddingTop: 13 }}>
+                <EducationCard item={item} index={index} isLeft={true} dark={dark} />
+            </div>
         </div>
     );
 }
@@ -460,15 +562,15 @@ export default function Education() {
     const sectionRef = useRef<HTMLElement>(null);
     const headingRef = useRef<HTMLDivElement>(null);
     const headingInView = useInView(headingRef, { once: true, margin: "-60px" });
+    const [isMobile, setIsMobile] = useState(false);
 
-    // Central line progress
+    // Central line progress (desktop only)
     const { scrollYProgress } = useScroll({
         target: sectionRef,
         offset: ["start 80%", "end 20%"],
     });
     const lineScaleY = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
-    // Read dark mode from document class (set by Navbar)
     const [dark, setDark] = useState(() => {
         if (typeof window !== "undefined") {
             return document.documentElement.classList.contains("dark");
@@ -476,86 +578,46 @@ export default function Education() {
         return false;
     });
 
-    // Listen for dark mode changes from Navbar
     useEffect(() => {
         const observer = new MutationObserver(() => {
             setDark(document.documentElement.classList.contains("dark"));
         });
         observer.observe(document.documentElement, {
             attributes: true,
-            attributeFilter: ['class']
+            attributeFilter: ["class"],
         });
         return () => observer.disconnect();
+    }, []);
+
+    useEffect(() => {
+        const check = () => setIsMobile(window.innerWidth <= 1024);
+        check();
+        window.addEventListener("resize", check);
+        return () => window.removeEventListener("resize", check);
     }, []);
 
     const bg = dark ? "#0d0d0c" : "#ececea";
     const text = dark ? "#f0efea" : "#111110";
     const border = dark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.09)";
-    const chevBg = dark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.07)";
     const lineBg = dark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.1)";
+
+    // Gradient line color for mobile connector
+    const mobileLineGradient = `linear-gradient(to bottom, #7c6fcd, #4caf7d, #f5a623, #e040fb)`;
 
     return (
         <>
             <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
         html, body {
           background: ${bg};
           font-family: 'Funnel Display', sans-serif;
           min-height: 100vh;
           transition: background 0.35s;
         }
-
-        /* Desktop zigzag layout */
-        .timeline-row {
-          display: grid;
-          grid-template-columns: 1fr 60px 1fr;
-          align-items: start;
-          gap: 0;
-          margin-bottom: 40px;
-          position: relative;
-        }
-
-        .timeline-row .card-left  { padding-right: 32px; }
-        .timeline-row .card-right { padding-left:  32px; }
-        .timeline-row .spacer-left  { visibility: hidden; }
-        .timeline-row .spacer-right { visibility: hidden; }
-
-        /* Mobile: single column */
-        @media (max-width: 720px) {
-          .timeline-row {
-            grid-template-columns: 24px 1fr;
-            gap: 0;
-            margin-bottom: 28px;
-          }
-          .timeline-row .card-left,
-          .timeline-row .card-right {
-            grid-column: 2;
-            grid-row: 1;
-            padding-left: 16px;
-            padding-right: 0;
-          }
-          .timeline-row .dot-col {
-            grid-column: 1;
-            grid-row: 1;
-            position: static;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-top: 32px;
-          }
-          .timeline-row .spacer-left,
-          .timeline-row .spacer-right { display: none; }
-        }
-
-        .highlights-grid {
-          grid-template-columns: 1fr 1fr;
-        }
+        .highlights-grid { grid-template-columns: 1fr 1fr; }
         @media (max-width: 460px) {
-          .highlights-grid {
-            grid-template-columns: 1fr !important;
-          }
+          .highlights-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
 
@@ -596,7 +658,6 @@ export default function Education() {
                         zIndex: 1,
                     }}
                 >
-
                     {/* ── Heading ── */}
                     <motion.div
                         ref={headingRef}
@@ -631,120 +692,86 @@ export default function Education() {
                     </motion.div>
 
                     {/* ── Timeline ── */}
-                    <div style={{ position: "relative" }}>
-
-                        {/* Central scroll-driven line */}
-                        <div
-                            aria-hidden="true"
-                            style={{
-                                position: "absolute",
-                                left: "50%",
-                                top: 0, bottom: 0,
-                                width: 1,
-                                background: lineBg,
-                                transform: "translateX(-50%)",
-                                zIndex: 1,
-                            }}
-                        >
-                            <motion.div
+                    {isMobile ? (
+                        /* ── MOBILE / TABLET: left-rail timeline ── */
+                        <div style={{ position: "relative" }}>
+                            {/* Continuous background rail line */}
+                            <div
+                                aria-hidden="true"
                                 style={{
-                                    width: "100%",
-                                    height: "100%",
-                                    background: `linear-gradient(to bottom, #7c6fcd, #4caf7d, #f5a623, #e040fb)`,
-                                    scaleY: lineScaleY,
-                                    originY: 0,
-                                    opacity: 0.55,
+                                    position: "absolute",
+                                    left: 13,
+                                    top: 20,
+                                    bottom: 20,
+                                    width: 2,
+                                    background: lineBg,
+                                    zIndex: 0,
                                 }}
-                            />
-                        </div>
+                            >
+                                <motion.div
+                                    style={{
+                                        width: "100%",
+                                        height: "100%",
+                                        background: mobileLineGradient,
+                                        scaleY: lineScaleY,
+                                        originY: 0,
+                                        opacity: 0.55,
+                                    }}
+                                />
+                            </div>
 
-                        {/* Cards — zigzag desktop, stacked mobile */}
-                        {EDUCATION.map((item, i) => {
-                            const isLeft = i % 2 === 0;
-                            return (
-                                <TimelineRow
+                            {EDUCATION.map((item, i) => (
+                                <MobileTimelineRow
                                     key={item.id}
                                     item={item}
                                     index={i}
-                                    isLeft={isLeft}
+                                    dark={dark}
+                                    isLast={i === EDUCATION.length - 1}
+                                    lineColor={item.accent + "88"}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        /* ── DESKTOP: zigzag center timeline ── */
+                        <div style={{ position: "relative" }}>
+                            {/* Central scroll-driven line */}
+                            <div
+                                aria-hidden="true"
+                                style={{
+                                    position: "absolute",
+                                    left: "50%",
+                                    top: 0, bottom: 0,
+                                    width: 1,
+                                    background: lineBg,
+                                    transform: "translateX(-50%)",
+                                    zIndex: 1,
+                                }}
+                            >
+                                <motion.div
+                                    style={{
+                                        width: "100%",
+                                        height: "100%",
+                                        background: `linear-gradient(to bottom, #7c6fcd, #4caf7d, #f5a623, #e040fb)`,
+                                        scaleY: lineScaleY,
+                                        originY: 0,
+                                        opacity: 0.55,
+                                    }}
+                                />
+                            </div>
+
+                            {EDUCATION.map((item, i) => (
+                                <DesktopTimelineRow
+                                    key={item.id}
+                                    item={item}
+                                    index={i}
+                                    isLeft={i % 2 === 0}
                                     dark={dark}
                                 />
-                            );
-                        })}
-                    </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             </section>
         </>
-    );
-}
-
-// ─── Timeline row (zigzag) ────────────────────────────────────────────────────
-function TimelineRow({
-    item,
-    index,
-    isLeft,
-    dark,
-}: {
-    item: EducationItem;
-    index: number;
-    isLeft: boolean;
-    dark: boolean;
-}) {
-    const ref = useRef<HTMLDivElement>(null);
-    const inView = useInView(ref, { once: true, margin: "-60px" });
-
-    return (
-        <div ref={ref} className="timeline-row">
-            {/* Desktop zigzag */}
-            {isLeft ? (
-                <>
-                    {/* Card on LEFT */}
-                    <div className="card-left">
-                        <EducationCard
-                            item={item}
-                            index={index}
-                            isLeft={true}
-                            dark={dark}
-                            isMobile={false}
-                        />
-                    </div>
-
-                    {/* Center dot */}
-                    <div
-                        className="dot-col"
-                        style={{ position: "relative", display: "flex", justifyContent: "center" }}
-                    >
-                        <TimelineDot accent={item.accent} index={index} inView={inView} />
-                    </div>
-
-                    {/* Spacer on RIGHT */}
-                    <div className="spacer-right" />
-                </>
-            ) : (
-                <>
-                    {/* Spacer on LEFT */}
-                    <div className="spacer-left" />
-
-                    {/* Center dot */}
-                    <div
-                        className="dot-col"
-                        style={{ position: "relative", display: "flex", justifyContent: "center" }}
-                    >
-                        <TimelineDot accent={item.accent} index={index} inView={inView} />
-                    </div>
-
-                    {/* Card on RIGHT */}
-                    <div className="card-right">
-                        <EducationCard
-                            item={item}
-                            index={index}
-                            isLeft={false}
-                            dark={dark}
-                            isMobile={false}
-                        />
-                    </div>
-                </>
-            )}
-        </div>
     );
 }

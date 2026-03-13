@@ -154,10 +154,10 @@ export default function SkillsHero({ dark, bg, text, muted, border, chevBg }: Sk
                     <h1
                         style={{
                             fontFamily: "'Bricolage Grotesque', sans-serif",
-                            fontWeight: 900,
+fontWeight: 900,
                             fontSize: "clamp(3rem, 8vw, 6.5rem)",
                             letterSpacing: "-0.045em",
-                            color: text,
+                            color: dark ? '#ffffff' : '#000000',
                             lineHeight: 0.95,
                         }}
                     >
@@ -241,10 +241,10 @@ export default function SkillsHero({ dark, bg, text, muted, border, chevBg }: Sk
                     style={{
                         fontFamily: "'Bricolage Grotesque', sans-serif",
                         fontWeight: 900,
-                        fontSize: "clamp(3rem, 8vw, 6.5rem)",
+fontSize: "clamp(3rem, 8vw, 6.5rem)",
                         letterSpacing: "-0.045em",
-                        color: text,
-                        lineHeight: 0.95,
+                            color: dark ? '#ffffff' : '#000000',
+                            lineHeight: 0.95,
                     }}
                 >
                     Skills
@@ -255,8 +255,8 @@ export default function SkillsHero({ dark, bg, text, muted, border, chevBg }: Sk
                     transition={{ delay: 0.5, duration: 0.6 }}
                     style={{
                         marginTop: 14,
-                        fontSize: "clamp(0.84rem, 1.5vw, 1rem)",
-                        color: muted,
+fontSize: "clamp(0.84rem, 1.5vw, 1rem)",
+                        color: dark ? '#f0efea' : '#444',
                         maxWidth: 420,
                         margin: "14px auto 0",
                         lineHeight: 1.65,
