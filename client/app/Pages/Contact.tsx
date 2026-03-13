@@ -20,6 +20,7 @@ import {
     MessageCircle,
     CheckCircle,
 } from "lucide-react";
+import axios from "axios";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const CONTACT_INFO = [
@@ -65,31 +66,35 @@ function ContactForm({ dark }: { dark: boolean }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
 
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
         setIsSubmitted(false);
 
         try {
-            const response = await fetch('http://localhost:5000/api/contact', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formState),
-            });
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_BACKEND_API}/api/contact`,
+                formState
+            );
 
-            const data = await response.json();
+            const data = response.data;
 
             if (data.success) {
                 setIsSubmitted(true);
-                setFormState({ name: "", email: "", subject: "", message: "" });
+                setFormState({
+                    name: "",
+                    email: "",
+                    subject: "",
+                    message: ""
+                });
             } else {
-                alert(data.message || 'Failed to send message. Please try again.');
+                alert(data.message || "Failed to send message.");
             }
+
         } catch (error) {
-            console.error('Submit error:', error);
-            alert('Network error. Make sure backend is running on port 5000.');
+            console.error("Submit error:", error);
+            alert("Network error. Please try again.");
         } finally {
             setIsSubmitting(false);
         }
