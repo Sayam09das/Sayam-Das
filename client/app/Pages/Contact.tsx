@@ -21,6 +21,7 @@ import {
     CheckCircle,
 } from "lucide-react";
 import axios from "axios";
+import ReCAPTCHA from "react-google-recaptcha";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const CONTACT_INFO = [
@@ -57,6 +58,7 @@ const FAQS = [
 
 // ─── Contact Form ───────────────────────────────────────────────────────────
 function ContactForm({ dark }: { dark: boolean }) {
+
     const [formState, setFormState] = useState({
         name: "",
         email: "",
@@ -65,7 +67,7 @@ function ContactForm({ dark }: { dark: boolean }) {
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
-
+    const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -75,16 +77,25 @@ function ContactForm({ dark }: { dark: boolean }) {
         try {
             const response = await axios.post(
                 `${process.env.NEXT_PUBLIC_BACKEND_API}/api/contact`,
-                formState,
                 {
-                  timeout: 10000,
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
+                    ...formState,
+                    captchaToken
+                },
+                {
+                    timeout: 10000,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                 }
             );
 
             const data = response.data;
+
+            if (!captchaToken) {
+                alert("Please verify you are not a robot.");
+                setIsSubmitting(false);
+                return;
+            }
 
             if (data.success) {
                 setIsSubmitted(true);
@@ -100,9 +111,9 @@ function ContactForm({ dark }: { dark: boolean }) {
 
         } catch (error: any) {
             console.error("Submit error:", error);
-            const errorMsg = error.code === 'ECONNABORTED' 
-              ? 'Request timeout. Server might be slow.' 
-              : error.response?.data?.message || 'Network/CORS error. Try refreshing.';
+            const errorMsg = error.code === 'ECONNABORTED'
+                ? 'Request timeout. Server might be slow.'
+                : error.response?.data?.message || 'Network/CORS error. Try refreshing.';
             alert(errorMsg);
         } finally {
             setIsSubmitting(false);
@@ -324,6 +335,12 @@ function ContactForm({ dark }: { dark: boolean }) {
                     }}
                 />
             </div>
+
+            <ReCAPTCHA
+                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+                onChange={(token: string | null) => setCaptchaToken(token)}
+                style={{ marginBottom: 20 }}
+            />
 
             <motion.button
                 type="submit"
