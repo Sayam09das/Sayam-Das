@@ -68,11 +68,31 @@ function ContactForm({ dark }: { dark: boolean }) {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
-        // Simulate form submission
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        setIsSubmitting(false);
-        setIsSubmitted(true);
-        setFormState({ name: "", email: "", subject: "", message: "" });
+        setIsSubmitted(false);
+
+        try {
+            const response = await fetch('http://localhost:5000/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formState),
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                setIsSubmitted(true);
+                setFormState({ name: "", email: "", subject: "", message: "" });
+            } else {
+                alert(data.message || 'Failed to send message. Please try again.');
+            }
+        } catch (error) {
+            console.error('Submit error:', error);
+            alert('Network error. Make sure backend is running on port 5000.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const inputBg = dark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)";
