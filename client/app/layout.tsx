@@ -43,6 +43,10 @@ export const metadata: Metadata = {
     google: "o1jKI6-J714LGmYzyktVCFoJcbvMPvmrxL8RZ66FpI4",
   },
 
+  alternates: {
+    canonical: "https://sayam-das.vercel.app",
+  },
+
   openGraph: {
     title: "Sayam Das | Full Stack Developer & AI Engineer",
     description:
@@ -64,14 +68,20 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Sayam Das | Full Stack Developer",
-    description:
-      "Full Stack Developer building AI & SaaS applications.",
+    description: "Full Stack Developer building AI & SaaS applications.",
     images: ["/og-image.png"],
   },
 
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 
   icons: {
@@ -86,6 +96,24 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const personSchema = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Sayam Das",
+    url: "https://sayam-das.vercel.app",
+    image: "https://sayam-das.vercel.app/og-image.png",
+    sameAs: [
+      "https://github.com/yourgithub",
+      "https://linkedin.com/in/yourlinkedin",
+      "https://twitter.com/yourtwitter"
+    ],
+    jobTitle: "Full Stack Developer",
+    worksFor: {
+      "@type": "Organization",
+      name: "Freelance",
+    },
+  };
+
   return (
     <html lang="en">
       <body
@@ -95,6 +123,13 @@ export default function RootLayout({
           <ThemeProvider>{children}</ThemeProvider>
         </LenisProvider>
 
+        {/* Structured Data for Google */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+        />
+
+        {/* Theme Auto Mode */}
         <script
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
