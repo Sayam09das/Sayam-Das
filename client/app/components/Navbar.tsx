@@ -448,7 +448,7 @@ export default function Navbar() {
         {/* Brand */}
         <a className="brand" href="/">
           <div className="avatar">
-            <span className="avatar-fallback">SD</span>
+            <img src="/logo.png" alt="Sayam Das Logo" />
           </div>
           <div className="brand-divider" />
           <span className="brand-name">Sayam Das</span>
