@@ -10,6 +10,7 @@ import {
 } from "framer-motion";
 import SkillsHero from "./SkillsHero";
 
+
 // ─── Data ─────────────────────────────────────────────────────────────────────
 interface Skill {
     name: string;
