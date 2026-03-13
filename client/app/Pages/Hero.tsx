@@ -5,7 +5,7 @@ import { Instagram, Github, Mail, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const SOCIAL = [
-  { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
+  { icon: Instagram, href: "https://www.instagram.com/sayamdas9124/", label: "Instagram" },
   { icon: Github, href: "https://github.com/Sayam09das", label: "GitHub" },
 { icon: Mail, href: "mailto:sayamdas9124@gmail.com", label: "Email" },
 ];

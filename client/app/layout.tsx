@@ -39,15 +39,19 @@ export const metadata: Metadata = {
   authors: [{ name: "Sayam Das", url: "https://sayam-das.vercel.app" }],
   creator: "Sayam Das",
 
+  verification: {
+    google: "o1jKI6-J714LGmYzyktVCFoJcbvMPvmrxL8RZ66FpI4",
+  },
+
   openGraph: {
     title: "Sayam Das | Full Stack Developer & AI Engineer",
     description:
       "Building AI-powered SaaS platforms, Web3 systems, and scalable full-stack applications.",
-    url: "https://yourdomain.com",
+    url: "https://sayam-das.vercel.app",
     siteName: "Sayam Portfolio",
     images: [
       {
-        url: "/og-image.png", // add this image in public folder
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "Sayam Das Portfolio",
@@ -73,7 +77,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon-16x16.png",
     shortcut: "/favicon-32x32.png",
-    apple: "/apple-touch-icon.png"
+    apple: "/apple-touch-icon.png",
   },
 };
 
@@ -88,25 +92,23 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <LenisProvider>
-          <ThemeProvider>
-            {children}
-          </ThemeProvider>
+          <ThemeProvider>{children}</ThemeProvider>
         </LenisProvider>
-        {typeof window !== 'undefined' && (
-          <script 
-            suppressHydrationWarning
-            dangerouslySetInnerHTML={{
-              __html: `
-                (function() {
-                  const saved = localStorage.getItem('theme-preference');
-                  if (saved === 'dark' || (saved !== 'light' && (new Date().getHours() >= 19 || new Date().getHours() < 7))) {
-                    document.documentElement.classList.add('dark');
-                  }
-                })();
-              `,
-            }}
-          />
-        )}
+
+        <script
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                const saved = localStorage.getItem('theme-preference');
+                if (saved === 'dark' || (saved !== 'light' && (new Date().getHours() >= 19 || new Date().getHours() < 7))) {
+                  document.documentElement.classList.add('dark');
+                }
+              })();
+            `,
+          }}
+        />
+
         <Analytics />
       </body>
     </html>
