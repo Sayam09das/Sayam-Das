@@ -19,6 +19,7 @@ import {
     Github,
     Linkedin,
     Mail,
+    Eye,
 } from "lucide-react";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
@@ -304,12 +305,7 @@ export default function About() {
     const headingInView = useInView(headingRef, { once: true, margin: "-60px" });
 
     // Read dark mode from document class (set by Navbar)
-    const [dark, setDark] = useState(() => {
-        if (typeof window !== "undefined") {
-            return document.documentElement.classList.contains("dark");
-        }
-        return false;
-    });
+  const [dark, setDark] = useState(false);
 
     // Listen for dark mode changes from Navbar
     useEffect(() => {
@@ -578,11 +574,15 @@ export default function About() {
                                     }}
                                 >
                                     <motion.a
-                                        href="#"
+                                        href="https://drive.google.com/file/d/1D0MoqDXLb0G15Av8bmx1ALyufP40apjY/view"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                         className="resume-btn"
                                         whileTap={{ scale: 0.96 }}
                                         style={{
-                                            display: "flex", alignItems: "center", gap: 7,
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: 7,
                                             padding: "9px 18px",
                                             borderRadius: 9999,
                                             background: text,
@@ -596,7 +596,7 @@ export default function About() {
                                             transition: "background 0.35s, color 0.35s",
                                         }}
                                     >
-                                        <Download size={13} strokeWidth={2.5} />
+                                        <Eye size={13} strokeWidth={2.5} />
                                         Resume
                                     </motion.a>
 
@@ -610,11 +610,14 @@ export default function About() {
                                             className="social-pill"
                                             whileTap={{ scale: 0.9 }}
                                             style={{
-                                                width: 36, height: 36,
+                                                width: 36,
+                                                height: 36,
                                                 borderRadius: "50%",
                                                 background: dark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.07)",
                                                 border: `1px solid ${border}`,
-                                                display: "flex", alignItems: "center", justifyContent: "center",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
                                                 color: muted,
                                                 textDecoration: "none",
                                                 flexShrink: 0,
