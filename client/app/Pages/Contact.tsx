@@ -75,7 +75,13 @@ function ContactForm({ dark }: { dark: boolean }) {
         try {
             const response = await axios.post(
                 `${process.env.NEXT_PUBLIC_BACKEND_API}/api/contact`,
-                formState
+                formState,
+                {
+                  timeout: 10000,
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                }
             );
 
             const data = response.data;
@@ -92,9 +98,12 @@ function ContactForm({ dark }: { dark: boolean }) {
                 alert(data.message || "Failed to send message.");
             }
 
-        } catch (error) {
+        } catch (error: any) {
             console.error("Submit error:", error);
-            alert("Network error. Please try again.");
+            const errorMsg = error.code === 'ECONNABORTED' 
+              ? 'Request timeout. Server might be slow.' 
+              : error.response?.data?.message || 'Network/CORS error. Try refreshing.';
+            alert(errorMsg);
         } finally {
             setIsSubmitting(false);
         }

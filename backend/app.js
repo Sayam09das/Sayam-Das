@@ -6,14 +6,28 @@ const contactRoute = require('./routes/contact.routes');
 
 const app = express();
 
-// Middleware
+// CORS configuration
 app.use(cors({
-  origin: 'https://sayam-das.vercel.app/',
+  origin: [
+    "http://localhost:3000",
+    "https://sayam-das.vercel.app"
+  ],
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
 }));
 
+// Body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Request logger (optional but useful)
+app.use((req, res, next) => {
+  console.log(
+    `${new Date().toISOString()} | ${req.method} ${req.originalUrl} | Origin: ${req.get("Origin")}`
+  );
+  next();
+});
 
 // Routes
 app.use('/api', contactRoute);
@@ -21,14 +35,16 @@ app.use('/api', contactRoute);
 // Health check
 app.get('/', (req, res) => {
   res.json({
-    message: 'Sayam Portfolio Backend Running 🚀'
+    status: "OK",
+    message: "Sayam Portfolio Backend Running 🚀"
   });
 });
 
-// 404
-app.use('*', (req, res) => {
+// 404 handler
+app.use((req, res) => {
   res.status(404).json({
-    message: 'Route not found'
+    success: false,
+    message: "Route not found"
   });
 });
 
