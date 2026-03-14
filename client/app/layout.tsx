@@ -110,6 +110,13 @@ export default function RootLayout({
       name: "Freelance",
     },
   };
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Sayam Das",
+    alternateName: "Sayam Das Portfolio",
+    url: "https://sayam-das.vercel.app"
+  };
 
   return (
     <html lang="en">
@@ -124,6 +131,11 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }}
+        />
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
 
         {/* Theme Auto Mode */}
