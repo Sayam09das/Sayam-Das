@@ -19,21 +19,22 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://sayam-das.vercel.app"),
 
   title: {
-    default: "Sayam Das | Full Stack Developer & AI Engineer",
+    default: "Sayam Das | Full Stack Developer",
     template: "%s | Sayam Das",
   },
 
   description:
-    "Portfolio of Sayam Das – Full Stack Developer specializing in Next.js, AI-powered applications, SaaS platforms, and modern web architecture.",
+    "Portfolio of Sayam Das – Full Stack Developer building modern web applications with Next.js, scalable backend systems, and beautiful UI.",
+
+  applicationName: "Sayam Das",
 
   keywords: [
     "Sayam Das",
     "Full Stack Developer",
     "Next.js Developer",
-    "AI Developer",
-    "Machine Learning Projects",
     "Portfolio",
     "Web Developer India",
+    "JavaScript Developer",
   ],
 
   authors: [{ name: "Sayam Das", url: "https://sayam-das.vercel.app" }],
@@ -48,11 +49,11 @@ export const metadata: Metadata = {
   },
 
   openGraph: {
-    title: "Sayam Das | Full Stack Developer & AI Engineer",
+    title: "Sayam Das | Full Stack Developer",
     description:
-      "Building AI-powered SaaS platforms, Web3 systems, and scalable full-stack applications.",
+      "Portfolio of Sayam Das – Full Stack Developer building modern web applications using Next.js and scalable backend systems.",
     url: "https://sayam-das.vercel.app",
-    siteName: "Sayam Portfolio",
+    siteName: "Sayam Das",
     images: [
       {
         url: "/og-image.png",
@@ -68,20 +69,14 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Sayam Das | Full Stack Developer",
-    description: "Full Stack Developer building AI & SaaS applications.",
+    description:
+      "Full Stack Developer building modern web applications and scalable backend systems.",
     images: ["/og-image.png"],
   },
 
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
   },
 
   icons: {
@@ -89,6 +84,8 @@ export const metadata: Metadata = {
     shortcut: "/favicon-32x32.png",
     apple: "/apple-touch-icon.png",
   },
+
+  category: "technology",
 };
 
 export default function RootLayout({
