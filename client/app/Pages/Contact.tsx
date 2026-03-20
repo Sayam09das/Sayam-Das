@@ -71,49 +71,37 @@ function ContactForm({ dark }: { dark: boolean }) {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!captchaToken) {
+            alert("Please verify you are not a robot.");
+            return;
+        }
+
         setIsSubmitting(true);
         setIsSubmitted(false);
 
         try {
             const response = await axios.post(
                 `${process.env.NEXT_PUBLIC_BACKEND_API}/api/contact`,
+                { ...formState, captchaToken },
                 {
-                    ...formState,
-                    captchaToken
-                },
-                {
-                    timeout: 10000,
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    timeout: 30000,
+                    headers: { 'Content-Type': 'application/json' },
                 }
             );
 
-            const data = response.data;
-
-            if (!captchaToken) {
-                alert("Please verify you are not a robot.");
-                setIsSubmitting(false);
-                return;
-            }
-
-            if (data.success) {
+            if (response.data.success) {
                 setIsSubmitted(true);
-                setFormState({
-                    name: "",
-                    email: "",
-                    subject: "",
-                    message: ""
-                });
+                setFormState({ name: "", email: "", subject: "", message: "" });
             } else {
-                alert(data.message || "Failed to send message.");
+                alert(response.data.message || "Failed to send message.");
             }
 
         } catch (error: any) {
             console.error("Submit error:", error);
             const errorMsg = error.code === 'ECONNABORTED'
-                ? 'Request timeout. Server might be slow.'
-                : error.response?.data?.message || 'Network/CORS error. Try refreshing.';
+                ? 'Request timed out. The server may be waking up — please try again.'
+                : error.response?.data?.message || 'Network error. Please try again.';
             alert(errorMsg);
         } finally {
             setIsSubmitting(false);
