@@ -310,14 +310,14 @@ export default function Footer() {
                             </h4>
                             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                                 <a
-                                    href="mailto:sayamdas9124@gmail.com"
+                                    href="mailto:dassayam2021@gmail.com"
                                     style={{
                                         fontSize: "0.9rem",
                                         color: muted,
                                         textDecoration: "none",
                                     }}
                                 >
-                                    sayamdas9124@gmail.com
+                                    dassayam2021@gmail.com
                                 </a>
                                 <a
                                     href="tel:+91 9635825787"
