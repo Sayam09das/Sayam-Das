@@ -10,6 +10,7 @@ import {
     useSpring,
 } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useTheme } from"../context/ThemeContext";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface Service {
@@ -434,25 +435,8 @@ export default function Services() {
     const sectionRef = useRef<HTMLElement>(null);
     const isInView = useInView(sectionRef, { once: true, margin: "-8%" });
 
-    // Read dark mode from document class (set by Navbar)
-    const [dark, setDark] = useState(() => {
-        if (typeof window !== "undefined") {
-            return document.documentElement.classList.contains("dark");
-        }
-        return false;
-    });
-
-    // Listen for dark mode changes from Navbar
-    useEffect(() => {
-        const observer = new MutationObserver(() => {
-            setDark(document.documentElement.classList.contains("dark"));
-        });
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        });
-        return () => observer.disconnect();
-    }, []);
+    const { theme } = useTheme();
+    const dark = theme === 'dark';
 
     // Subtle section entrance parallax
     const { scrollYProgress } = useScroll({

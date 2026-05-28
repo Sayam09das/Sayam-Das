@@ -8,6 +8,7 @@ import {
     useMotionValue,
     AnimatePresence,
 } from "framer-motion";
+import { useTheme } from "../context/ThemeContext";
 import SkillsHero from "./SkillsHero";
 
 
@@ -623,25 +624,8 @@ export default function Skills() {
     const headingRef = useRef<HTMLDivElement>(null);
     const headingInView = useInView(headingRef, { once: true, margin: "-60px" });
 
-    // Read dark mode from document class (set by Navbar)
-    const [dark, setDark] = useState(() => {
-        if (typeof window !== "undefined") {
-            return document.documentElement.classList.contains("dark");
-        }
-        return false;
-    });
-
-    // Listen for dark mode changes from Navbar
-    useEffect(() => {
-        const observer = new MutationObserver(() => {
-            setDark(document.documentElement.classList.contains("dark"));
-        });
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        });
-        return () => observer.disconnect();
-    }, []);
+    const { theme } = useTheme();
+    const dark = theme === 'dark';
 
     const filtered = activeCategory === "All"
         ? SKILLS

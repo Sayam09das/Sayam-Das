@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { Instagram, Github, Mail, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { CldImage } from "next-cloudinary";
+import { useTheme } from "../context/ThemeContext";
 
 const SOCIAL = [
   { icon: Instagram, href: "https://www.instagram.com/sayamdas9124/", label: "Instagram" },
@@ -13,16 +15,9 @@ const SOCIAL = [
 const GREETINGS = ["hello"];
 
 export default function HeroSection() {
-  const [dark, setDark] = useState(false);
+  const { theme } = useTheme();
+  const dark = theme === 'dark';
   const greetingIndex = 0;
-
-  useEffect(() => {
-    const obs = new MutationObserver(() => {
-      setDark(document.documentElement.classList.contains("dark"));
-    });
-    obs.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-    return () => obs.disconnect();
-  }, []);
 
   return (
     <>
@@ -405,11 +400,15 @@ html.dark {
               </motion.div>
             </div>
             <div className="hero-img-box">
-              <img
-                src="https://media.licdn.com/dms/image/v2/D5603AQE5iTRedUZuRg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1711272885603?e=1774483200&v=beta&t=jdNlHqDUak55AqWd_Py57OHjdn3R9ApfBmSIhQNLZXE"
+                <CldImage
+                src="Sayam Das"
+                width={500}
+                height={500}
+                crop={{ type: "auto", source: true }}
                 alt="Profile"
               />
             </div>
+
           </div>
         </div>
 

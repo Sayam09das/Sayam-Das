@@ -14,6 +14,7 @@ import {
     Star,
     ExternalLink,
 } from "lucide-react";
+import { useTheme } from "../context/ThemeContext";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 interface EducationItem {
@@ -563,6 +564,8 @@ export default function Education() {
     const headingRef = useRef<HTMLDivElement>(null);
     const headingInView = useInView(headingRef, { once: true, margin: "-60px" });
     const [isMobile, setIsMobile] = useState(false);
+    const { theme } = useTheme();
+    const dark = theme === 'dark';
 
     // Central line progress (desktop only)
     const { scrollYProgress } = useScroll({
@@ -570,24 +573,6 @@ export default function Education() {
         offset: ["start 80%", "end 20%"],
     });
     const lineScaleY = useTransform(scrollYProgress, [0, 1], [0, 1]);
-
-    const [dark, setDark] = useState(() => {
-        if (typeof window !== "undefined") {
-            return document.documentElement.classList.contains("dark");
-        }
-        return false;
-    });
-
-    useEffect(() => {
-        const observer = new MutationObserver(() => {
-            setDark(document.documentElement.classList.contains("dark"));
-        });
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ["class"],
-        });
-        return () => observer.disconnect();
-    }, []);
 
     useEffect(() => {
         const check = () => setIsMobile(window.innerWidth <= 1024);

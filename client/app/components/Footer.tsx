@@ -6,6 +6,7 @@ import {
     useInView,
     AnimatePresence,
 } from "framer-motion";
+import { useTheme } from "../context/ThemeContext";
 import {
     Github,
     Linkedin,
@@ -37,25 +38,8 @@ export default function Footer() {
     const footerRef = useRef<HTMLElement>(null);
     const headingInView = useInView(footerRef, { once: true, margin: "-60px" });
 
-    // Read dark mode from document class (set by Navbar)
-    const [dark, setDark] = useState(() => {
-        if (typeof window !== "undefined") {
-            return document.documentElement.classList.contains("dark");
-        }
-        return false;
-    });
-
-    // Listen for dark mode changes from Navbar
-    useEffect(() => {
-        const observer = new MutationObserver(() => {
-            setDark(document.documentElement.classList.contains("dark"));
-        });
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        });
-        return () => observer.disconnect();
-    }, []);
+    const { theme } = useTheme();
+    const dark = theme === 'dark';
 
     const bg = dark ? "#0a0a09" : "#e5e4e0";
     const cardBg = dark ? "#141412" : "#f8f7f4";

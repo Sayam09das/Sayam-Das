@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useReducer, useEffect, useState, ReactNode } from 'react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type ThemePreference = 'system' | 'light' | 'dark';
@@ -49,8 +49,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     isSystemDark: false,
   });
 
+  const [mounted, setMounted] = useState(false);
+
   // ── Load initial state from localStorage ─────────────────────────────────────
   useEffect(() => {
+    setMounted(true);
     const saved = localStorage.getItem('theme-preference') as ThemePreference | null;
     if (saved && ['system', 'light', 'dark'].includes(saved)) {
       dispatch({ type: 'SET_PREFERENCE', payload: saved });
@@ -59,6 +62,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   // ── Sync system dark state (runs every minute) ───────────────────────────────
   useEffect(() => {
+    if (!mounted) return;
+    
     const isDark = getSystemPreference();
     dispatch({ type: 'SET_SYSTEM_DARK', payload: isDark });
 
@@ -68,7 +73,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     }, 60000); // Check every minute
 
     return () => clearInterval(interval);
-  }, []);
+  }, [mounted]);
 
   // ── Computed current theme & apply to DOM ────────────────────────────────────
   const currentTheme: 'light' | 'dark' = 

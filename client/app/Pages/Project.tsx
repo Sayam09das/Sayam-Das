@@ -10,6 +10,7 @@ import {
     AnimatePresence,
 } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
+import { useTheme } from "../context/ThemeContext";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface Project {
@@ -440,26 +441,8 @@ function SectionHeading({ dark }: { dark: boolean }) {
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 export default function Projects() {
-
-    // Read dark mode from document class (set by Navbar)
-    const [dark, setDark] = useState(() => {
-        if (typeof window !== "undefined") {
-            return document.documentElement.classList.contains("dark");
-        }
-        return false;
-    });
-
-    // Listen for dark mode changes from Navbar
-    useEffect(() => {
-        const observer = new MutationObserver(() => {
-            setDark(document.documentElement.classList.contains("dark"));
-        });
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        });
-        return () => observer.disconnect();
-    }, []);
+    const { theme } = useTheme();
+    const dark = theme === 'dark';
 
     const bg = dark ? "#0d0d0c" : "#ececea";
 

@@ -9,6 +9,8 @@ import {
     useSpring,
     AnimatePresence,
 } from "framer-motion";
+import { CldImage } from "next-cloudinary";
+import { useTheme } from "../context/ThemeContext";
 import {
     Download,
     MapPin,
@@ -186,24 +188,29 @@ function ParallaxPhoto({ dark }: { dark: boolean }) {
                     zIndex: 1,
                 }}
             >
-                <motion.img
-                    src="https://media.licdn.com/dms/image/v2/D5603AQE5iTRedUZuRg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1711272885603?e=1774483200&v=beta&t=jdNlHqDUak55AqWd_Py57OHjdn3R9ApfBmSIhQNLZXE"
-                    alt="Sayam Das"
-                    draggable={false}
+                <motion.div
                     style={{
                         width: "100%",
                         height: "115%",
-                        objectFit: "cover",
-                        objectPosition: "top",
-                        display: "block",
                         position: "absolute",
                         top: "-7.5%",
                         left: 0,
                         y,
                         filter: dark ? "brightness(0.8) saturate(0.85)" : "brightness(0.95) saturate(0.9)",
-                        userSelect: "none",
                     }}
-                />
+                >
+                    <CldImage
+                        src="Sayam Das"
+                        alt="Sayam Das"
+                        fill
+                        draggable={false}
+                        style={{
+                            objectFit: "cover",
+                            objectPosition: "top",
+                            userSelect: "none",
+                        }}
+                    />
+                </motion.div>
 
                 {/* Bottom gradient */}
                 <div
@@ -304,20 +311,8 @@ export default function About() {
     const headingRef = useRef<HTMLDivElement>(null);
     const headingInView = useInView(headingRef, { once: true, margin: "-60px" });
 
-    // Read dark mode from document class (set by Navbar)
-  const [dark, setDark] = useState(false);
-
-    // Listen for dark mode changes from Navbar
-    useEffect(() => {
-        const observer = new MutationObserver(() => {
-            setDark(document.documentElement.classList.contains("dark"));
-        });
-        observer.observe(document.documentElement, {
-            attributes: true,
-            attributeFilter: ['class']
-        });
-        return () => observer.disconnect();
-    }, []);
+    const { theme } = useTheme();
+    const dark = theme === 'dark';
 
     const bg = dark ? "#0d0d0c" : "#ececea";
     const cardBg = dark ? "#141412" : "#f8f7f4";
