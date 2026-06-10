@@ -22,7 +22,6 @@ export default function page() {
       <Projects />
       <Contact />
       <Footer />
-      
     </div>
   )
 }
