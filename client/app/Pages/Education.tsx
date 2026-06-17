@@ -15,8 +15,12 @@ import {
     ExternalLink,
 } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
+gsap.registerPlugin(ScrollTrigger);
+
+// ─── Data ────────────────────────────────────────────────────────────────────
 interface EducationItem {
     id: number;
     period: string;
@@ -116,7 +120,7 @@ const TYPE_LABELS: Record<string, string> = {
     cert: "Certificate",
 };
 
-// ─── Card component ───────────────────────────────────────────────────────────
+// ─── Card component ─────────────────────────────────────────────────────────
 function EducationCard({
     item,
     index,
@@ -128,18 +132,65 @@ function EducationCard({
     isLeft: boolean;
     dark: boolean;
 }) {
-    const ref = useRef<HTMLDivElement>(null);
-    const inView = useInView(ref, { once: true, margin: "-60px" });
+    const ref       = useRef<HTMLDivElement>(null);
+    const glowRef   = useRef<HTMLDivElement>(null);
+    const stripRef  = useRef<HTMLDivElement>(null);
+    const inView    = useInView(ref, { once: true, margin: "-60px" });
     const [hovered, setHovered] = useState(false);
     const Icon = item.icon;
 
-    const cardBg = dark ? "#161614" : "#ffffff";
-    const border = dark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.09)";
-    const text = dark ? "#f0efea" : "#111110";
-    const muted = dark ? "rgba(240,239,234,0.44)" : "rgba(0,0,0,0.44)";
-    const tagBg = dark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.05)";
+    const cardBg  = dark ? "#161614" : "#ffffff";
+    const border  = dark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.09)";
+    const text    = dark ? "#f0efea" : "#111110";
+    const muted   = dark ? "rgba(240,239,234,0.44)" : "rgba(0,0,0,0.44)";
+    const tagBg   = dark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.05)";
 
     const xFrom = isLeft ? -40 : 40;
+
+    // GSAP: ambient glow drift — runs continuously, independent of hover
+    useEffect(() => {
+        const el = glowRef.current;
+        if (!el) return;
+        const tween = gsap.to(el, {
+            x: isLeft ? -14 : 14,
+            y: 10,
+            duration: 6 + index * 0.4,
+            ease: "sine.inOut",
+            yoyo: true,
+            repeat: -1,
+        });
+        return () => { tween.kill(); };
+    }, [isLeft, index]);
+
+    // GSAP: glow intensity reacts to hover (layered on top of the drift tween)
+    useEffect(() => {
+        const el = glowRef.current;
+        if (!el) return;
+        gsap.to(el, {
+            opacity: hovered ? 0.16 : 0,
+            duration: 0.35,
+            ease: "power2.out",
+        });
+    }, [hovered]);
+
+    // GSAP: accent strip "breathing" pulse on hover
+    useEffect(() => {
+        const el = stripRef.current;
+        if (!el) return;
+        if (hovered) {
+            gsap.to(el, {
+                width: 5,
+                duration: 0.3,
+                ease: "power2.out",
+            });
+        } else {
+            gsap.to(el, {
+                width: 3,
+                duration: 0.3,
+                ease: "power2.out",
+            });
+        }
+    }, [hovered]);
 
     return (
         <motion.div
@@ -153,11 +204,12 @@ function EducationCard({
             }}
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
+            className="edu-card"
             style={{
                 background: cardBg,
                 border: `1px solid ${hovered ? item.accent + "55" : border}`,
                 borderRadius: 20,
-                padding: "clamp(20px, 3vw, 32px)",
+                padding: "clamp(18px, 3vw, 32px)",
                 position: "relative",
                 overflow: "hidden",
                 boxShadow: hovered
@@ -167,10 +219,9 @@ function EducationCard({
                 cursor: "default",
             }}
         >
-            {/* Accent glow */}
-            <motion.div
-                animate={{ opacity: hovered ? 0.1 : 0 }}
-                transition={{ duration: 0.35 }}
+            {/* Accent glow — GSAP drives drift + hover opacity */}
+            <div
+                ref={glowRef}
                 style={{
                     position: "absolute",
                     top: -60, right: -60,
@@ -180,12 +231,14 @@ function EducationCard({
                     filter: "blur(60px)",
                     pointerEvents: "none",
                     zIndex: 0,
+                    opacity: 0,
                 }}
             />
 
-            {/* Left accent strip */}
+            {/* Left accent strip — GSAP drives width pulse, Framer drives entrance scale */}
             <motion.div
-                initial={{ scaleY: 0, originY: 0 }}
+                ref={stripRef as React.Ref<HTMLDivElement>}
+                initial={{ scaleY: 0 }}
                 animate={inView ? { scaleY: 1 } : {}}
                 transition={{ delay: index * 0.1 + 0.15, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 style={{
@@ -194,12 +247,13 @@ function EducationCard({
                     width: 3,
                     background: `linear-gradient(to bottom, ${item.accent}, ${item.accent}44)`,
                     borderRadius: "0 2px 2px 0",
+                    transformOrigin: "top",
                 }}
             />
 
             <div style={{ position: "relative", zIndex: 1 }}>
                 {/* Top row */}
-                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 16 }}>
+                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, marginBottom: 16, flexWrap: "wrap" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                         {/* Icon badge */}
                         <motion.div
@@ -348,14 +402,7 @@ function EducationCard({
                 </p>
 
                 {/* Highlights */}
-                <div
-                    style={{
-                        display: "grid",
-                        gridTemplateColumns: "1fr 1fr",
-                        gap: "8px 12px",
-                    }}
-                    className="highlights-grid"
-                >
+                <div className="edu-highlights-grid">
                     {item.highlights.map((h, i) => (
                         <motion.div
                             key={h}
@@ -389,7 +436,7 @@ function EducationCard({
     );
 }
 
-// ─── Timeline dot ─────────────────────────────────────────────────────────────
+// ─── Timeline dot ────────────────────────────────────────────────────────────
 function TimelineDot({
     accent,
     index,
@@ -399,17 +446,45 @@ function TimelineDot({
     index: number;
     inView: boolean;
 }) {
-    return (
-        <motion.div
-            initial={{ scale: 0, opacity: 0 }}
-            animate={inView ? { scale: 1, opacity: 1 } : {}}
-            transition={{
+    const dotRef  = useRef<HTMLDivElement>(null);
+    const ringRef = useRef<HTMLDivElement>(null);
+
+    // GSAP: continuous pulse ring (replaces Framer's repeating animate loop —
+    // GSAP composites this more cheaply for many simultaneous infinite loops)
+    useEffect(() => {
+        const el = ringRef.current;
+        if (!el) return;
+        const tween = gsap.to(el, {
+            scale: 1.8,
+            opacity: 0,
+            duration: 1.6,
+            ease: "power1.out",
+            repeat: -1,
+            delay: index * 0.15,
+        });
+        gsap.set(el, { scale: 1, opacity: 0.5 });
+        return () => { tween.kill(); };
+    }, [index]);
+
+    // GSAP: pop-in entrance with a tiny overshoot bounce
+    useEffect(() => {
+        if (!inView) return;
+        const el = dotRef.current;
+        if (!el) return;
+        gsap.fromTo(el,
+            { scale: 0, opacity: 0 },
+            {
+                scale: 1, opacity: 1,
+                duration: 0.5,
                 delay: index * 0.1 + 0.05,
-                duration: 0.45,
-                type: "spring",
-                stiffness: 320,
-                damping: 18,
-            }}
+                ease: "back.out(2.4)",
+            }
+        );
+    }, [inView, index]);
+
+    return (
+        <div
+            ref={dotRef}
             style={{
                 width: 14, height: 14,
                 borderRadius: "50%",
@@ -419,24 +494,25 @@ function TimelineDot({
                 position: "relative",
                 zIndex: 2,
                 flexShrink: 0,
+                opacity: 0,
             }}
         >
-            {/* Pulse ring */}
-            <motion.div
-                animate={{ scale: [1, 1.8, 1], opacity: [0.5, 0, 0.5] }}
-                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+            {/* Pulse ring — GSAP infinite loop */}
+            <div
+                ref={ringRef}
                 style={{
                     position: "absolute",
                     inset: -4,
                     borderRadius: "50%",
                     background: accent,
+                    opacity: 0,
                 }}
             />
-        </motion.div>
+        </div>
     );
 }
 
-// ─── Desktop Timeline Row (zigzag) ────────────────────────────────────────────
+// ─── Desktop timeline row (zigzag) ───────────────────────────────────────────
 function DesktopTimelineRow({
     item,
     index,
@@ -452,23 +528,14 @@ function DesktopTimelineRow({
     const inView = useInView(ref, { once: true, margin: "-60px" });
 
     return (
-        <div
-            ref={ref}
-            style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 60px 1fr",
-                alignItems: "start",
-                marginBottom: 40,
-                position: "relative",
-            }}
-        >
+        <div ref={ref} className="edu-desktop-row">
             {isLeft ? (
                 <>
-                    <div style={{ paddingRight: 32 }}>
+                    <div className="edu-row-left-pad">
                         <EducationCard item={item} index={index} isLeft={true} dark={dark} />
                     </div>
-                    <div style={{ position: "relative", display: "flex", justifyContent: "center" }}>
-                        <div style={{ position: "absolute", top: "clamp(28px,4vw,36px)", zIndex: 10 }}>
+                    <div className="edu-row-dot-col">
+                        <div className="edu-row-dot-pos">
                             <TimelineDot accent={item.accent} index={index} inView={inView} />
                         </div>
                     </div>
@@ -477,12 +544,12 @@ function DesktopTimelineRow({
             ) : (
                 <>
                     <div />
-                    <div style={{ position: "relative", display: "flex", justifyContent: "center" }}>
-                        <div style={{ position: "absolute", top: "clamp(28px,4vw,36px)", zIndex: 10 }}>
+                    <div className="edu-row-dot-col">
+                        <div className="edu-row-dot-pos">
                             <TimelineDot accent={item.accent} index={index} inView={inView} />
                         </div>
                     </div>
-                    <div style={{ paddingLeft: 32 }}>
+                    <div className="edu-row-right-pad">
                         <EducationCard item={item} index={index} isLeft={false} dark={dark} />
                     </div>
                 </>
@@ -491,7 +558,7 @@ function DesktopTimelineRow({
     );
 }
 
-// ─── Mobile Timeline Row (left-aligned) ───────────────────────────────────────
+// ─── Mobile timeline row (left-aligned) ──────────────────────────────────────
 function MobileTimelineRow({
     item,
     index,
@@ -511,27 +578,12 @@ function MobileTimelineRow({
     return (
         <div
             ref={ref}
-            style={{
-                display: "flex",
-                alignItems: "flex-start",
-                gap: 0,
-                position: "relative",
-                marginBottom: isLast ? 0 : 32,
-            }}
+            className="edu-mobile-row"
+            style={{ marginBottom: isLast ? 0 : 32 }}
         >
             {/* Left column: dot + vertical line */}
-            <div
-                style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    flexShrink: 0,
-                    width: 28,
-                    paddingTop: 20,
-                }}
-            >
+            <div className="edu-mobile-dot-col">
                 <TimelineDot accent={item.accent} index={index} inView={inView} />
-                {/* Connecting line to next dot */}
                 {!isLast && (
                     <motion.div
                         initial={{ scaleY: 0 }}
@@ -542,7 +594,7 @@ function MobileTimelineRow({
                             flex: 1,
                             minHeight: 32,
                             background: lineColor,
-                            originY: 0,
+                            transformOrigin: "top",
                             marginTop: 6,
                             opacity: 0.5,
                         }}
@@ -551,7 +603,7 @@ function MobileTimelineRow({
             </div>
 
             {/* Card */}
-            <div style={{ flex: 1, paddingLeft: 16, paddingTop: 13 }}>
+            <div className="edu-mobile-card-col">
                 <EducationCard item={item} index={index} isLeft={true} dark={dark} />
             </div>
         </div>
@@ -560,14 +612,17 @@ function MobileTimelineRow({
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 export default function Education() {
-    const sectionRef = useRef<HTMLElement>(null);
-    const headingRef = useRef<HTMLDivElement>(null);
-    const headingInView = useInView(headingRef, { once: true, margin: "-60px" });
+    const sectionRef     = useRef<HTMLElement>(null);
+    const headingRef     = useRef<HTMLDivElement>(null);
+    const headingLineL   = useRef<HTMLDivElement>(null);
+    const headingLineR   = useRef<HTMLDivElement>(null);
+    const headingTextRef = useRef<HTMLHeadingElement>(null);
+    const headingInView  = useInView(headingRef, { once: true, margin: "-60px" });
     const [isMobile, setIsMobile] = useState(false);
     const { theme } = useTheme();
-    const dark = theme === 'dark';
+    const dark = theme === "dark";
 
-    // Central line progress (desktop only)
+    // Central line progress (desktop + mobile, Framer scroll-linked)
     const { scrollYProgress } = useScroll({
         target: sectionRef,
         offset: ["start 80%", "end 20%"],
@@ -581,28 +636,138 @@ export default function Education() {
         return () => window.removeEventListener("resize", check);
     }, []);
 
-    const bg = dark ? "#0d0d0c" : "#ececea";
-    const text = dark ? "#f0efea" : "#111110";
+    // GSAP: heading lines draw in
+    useEffect(() => {
+        const ctx = gsap.context(() => {
+            gsap.fromTo(headingLineL.current,
+                { scaleX: 0, transformOrigin: "right center" },
+                {
+                    scaleX: 1, duration: 0.85, ease: "power3.out",
+                    scrollTrigger: { trigger: headingRef.current, start: "top 85%", toggleActions: "play none none none" },
+                }
+            );
+            gsap.fromTo(headingLineR.current,
+                { scaleX: 0, transformOrigin: "left center" },
+                {
+                    scaleX: 1, duration: 0.85, ease: "power3.out",
+                    scrollTrigger: { trigger: headingRef.current, start: "top 85%", toggleActions: "play none none none" },
+                }
+            );
+            gsap.fromTo(headingTextRef.current,
+                { opacity: 0, y: 18, skewX: 3 },
+                {
+                    opacity: 1, y: 0, skewX: 0, duration: 0.6, ease: "power3.out",
+                    scrollTrigger: { trigger: headingRef.current, start: "top 85%", toggleActions: "play none none none" },
+                }
+            );
+        }, sectionRef);
+
+        return () => ctx.revert();
+    }, []);
+
+    const bg     = dark ? "#0d0d0c" : "#ececea";
+    const text   = dark ? "#f0efea" : "#111110";
     const border = dark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.09)";
     const lineBg = dark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.1)";
 
-    // Gradient line color for mobile connector
     const mobileLineGradient = `linear-gradient(to bottom, #7c6fcd, #4caf7d, #f5a623, #e040fb)`;
 
     return (
         <>
             <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800;12..96,900&family=DM+Sans:wght@300;400;500&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body {
-          background: ${bg};
-          font-family: 'Funnel Display', sans-serif;
-          min-height: 100vh;
-          transition: background 0.35s;
+
+        /* ── Heading lines ── */
+        .edu-heading-line { flex: 1; height: 1px; }
+
+        /* ── Highlights grid ── */
+        .edu-highlights-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 8px 12px;
         }
-        .highlights-grid { grid-template-columns: 1fr 1fr; }
-        @media (max-width: 460px) {
-          .highlights-grid { grid-template-columns: 1fr !important; }
+
+        /* ── Desktop zigzag row ── */
+        .edu-desktop-row {
+          display: grid;
+          grid-template-columns: 1fr 60px 1fr;
+          align-items: start;
+          margin-bottom: 40px;
+          position: relative;
+        }
+        .edu-row-left-pad  { padding-right: 32px; }
+        .edu-row-right-pad { padding-left: 32px; }
+        .edu-row-dot-col {
+          position: relative;
+          display: flex;
+          justify-content: center;
+        }
+        .edu-row-dot-pos {
+          position: absolute;
+          top: clamp(28px, 4vw, 36px);
+          z-index: 10;
+        }
+
+        /* ── Mobile row ── */
+        .edu-mobile-row {
+          display: flex;
+          align-items: flex-start;
+          position: relative;
+        }
+        .edu-mobile-dot-col {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          flex-shrink: 0;
+          width: 28px;
+          padding-top: 20px;
+        }
+        .edu-mobile-card-col {
+          flex: 1;
+          padding-left: 16px;
+          padding-top: 13px;
+        }
+
+        /* ── Card hover scale (CSS-level safety, GSAP handles the rest) ── */
+        .edu-card {
+          will-change: transform;
+        }
+
+        /* ── Responsive ── */
+
+        /* Tablet fine-tune (still desktop-zigzag mode, isMobile flips at 1024 in JS) */
+        @media (max-width: 1024px) {
+          .edu-row-left-pad, .edu-row-right-pad { padding: 0; }
+        }
+
+        @media (max-width: 768px) {
+          .edu-mobile-card-col { padding-left: 14px; }
+          .edu-highlights-grid { gap: 7px 10px; }
+        }
+
+        @media (max-width: 600px) {
+          .edu-highlights-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 480px) {
+          .edu-mobile-dot-col  { width: 22px; padding-top: 16px; }
+          .edu-mobile-card-col { padding-left: 12px; padding-top: 10px; }
+        }
+
+        @media (max-width: 360px) {
+          .edu-mobile-card-col { padding-left: 10px; }
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+          .edu-heading-line,
+          .edu-card {
+            opacity: 1 !important;
+            transform: none !important;
+            transition: none !important;
+            animation: none !important;
+          }
         }
       `}</style>
 
@@ -625,9 +790,9 @@ export default function Education() {
                     style={{
                         position: "absolute", inset: 0,
                         backgroundImage: `
-              linear-gradient(${dark ? "rgba(255,255,255,0.022)" : "rgba(0,0,0,0.036)"} 1px, transparent 1px),
-              linear-gradient(90deg, ${dark ? "rgba(255,255,255,0.022)" : "rgba(0,0,0,0.036)"} 1px, transparent 1px)
-            `,
+                            linear-gradient(${dark ? "rgba(255,255,255,0.022)" : "rgba(0,0,0,0.036)"} 1px, transparent 1px),
+                            linear-gradient(90deg, ${dark ? "rgba(255,255,255,0.022)" : "rgba(0,0,0,0.036)"} 1px, transparent 1px)
+                        `,
                         backgroundSize: "80px 80px",
                         pointerEvents: "none",
                         zIndex: 0,
@@ -644,22 +809,22 @@ export default function Education() {
                     }}
                 >
                     {/* ── Heading ── */}
-                    <motion.div
+                    <div
                         ref={headingRef}
-                        initial={{ opacity: 0, y: 24 }}
-                        animate={headingInView ? { opacity: 1, y: 0 } : {}}
-                        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                         style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 20,
+                            display: "flex", alignItems: "center", gap: 20,
                             marginBottom: "clamp(48px, 7vw, 80px)",
-                            position: "relative",
                         }}
                     >
-                        <div style={{ flex: 1, height: 1, background: border }} />
+                        <div
+                            ref={headingLineL}
+                            className="edu-heading-line"
+                            style={{ background: border }}
+                        />
                         <h2
+                            ref={headingTextRef}
                             style={{
+                                opacity: 0, // GSAP
                                 fontFamily: "'Bricolage Grotesque', sans-serif",
                                 fontWeight: 900,
                                 fontSize: "clamp(2.2rem, 5.5vw, 4.2rem)",
@@ -673,21 +838,22 @@ export default function Education() {
                         >
                             Education
                         </h2>
-                        <div style={{ flex: 1, height: 1, background: border }} />
-                    </motion.div>
+                        <div
+                            ref={headingLineR}
+                            className="edu-heading-line"
+                            style={{ background: border }}
+                        />
+                    </div>
 
                     {/* ── Timeline ── */}
                     {isMobile ? (
-                        /* ── MOBILE / TABLET: left-rail timeline ── */
                         <div style={{ position: "relative" }}>
-                            {/* Continuous background rail line */}
+                            {/* Continuous background rail */}
                             <div
                                 aria-hidden="true"
                                 style={{
                                     position: "absolute",
-                                    left: 13,
-                                    top: 20,
-                                    bottom: 20,
+                                    left: 13, top: 20, bottom: 20,
                                     width: 2,
                                     background: lineBg,
                                     zIndex: 0,
@@ -695,8 +861,7 @@ export default function Education() {
                             >
                                 <motion.div
                                     style={{
-                                        width: "100%",
-                                        height: "100%",
+                                        width: "100%", height: "100%",
                                         background: mobileLineGradient,
                                         scaleY: lineScaleY,
                                         originY: 0,
@@ -717,15 +882,13 @@ export default function Education() {
                             ))}
                         </div>
                     ) : (
-                        /* ── DESKTOP: zigzag center timeline ── */
                         <div style={{ position: "relative" }}>
                             {/* Central scroll-driven line */}
                             <div
                                 aria-hidden="true"
                                 style={{
                                     position: "absolute",
-                                    left: "50%",
-                                    top: 0, bottom: 0,
+                                    left: "50%", top: 0, bottom: 0,
                                     width: 1,
                                     background: lineBg,
                                     transform: "translateX(-50%)",
@@ -734,8 +897,7 @@ export default function Education() {
                             >
                                 <motion.div
                                     style={{
-                                        width: "100%",
-                                        height: "100%",
+                                        width: "100%", height: "100%",
                                         background: `linear-gradient(to bottom, #7c6fcd, #4caf7d, #f5a623, #e040fb)`,
                                         scaleY: lineScaleY,
                                         originY: 0,
